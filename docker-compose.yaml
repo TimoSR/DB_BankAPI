@@ -1,49 +1,118 @@
 version: '3.8'
 
 services:
-  postgres_primary:
+  # Account Service
+  account_primary:
     image: postgres:13
-    container_name: postgres_primary
+    container_name: account_primary
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: mydatabase
-      POSTGRES_HOST_AUTH_METHOD: trust
+      POSTGRES_USER: account
+      POSTGRES_PASSWORD: account
+      POSTGRES_DB: account
     volumes:
-      - primary_data:/var/lib/postgresql/data
+      - account_data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
     networks:
-      - postgres_network
-    command: >
-      -c wal_level=replica
-      -c max_wal_senders=10
-      -c max_replication_slots=10
+      - backend_network
 
-  postgres_replica:
+  account_replica:
     image: postgres:13
-    container_name: postgres_replica
+    container_name: account_replica
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: mydatabase
+      POSTGRES_USER: account
+      POSTGRES_PASSWORD: account
+      POSTGRES_DB: account
     volumes:
-      - replica_data:/var/lib/postgresql/data
+      - account_replica_data:/var/lib/postgresql/data
     ports:
       - "5433:5432"
     depends_on:
-      - postgres_primary
-    networks:
-      - postgres_network
+      - account_primary
     command: >
       -c wal_level=replica
       -c hot_standby=on
-      -c primary_conninfo='host=postgres_primary port=5432 user=postgres password=postgres'
+      -c primary_conninfo='host=account_primary port=5432 user=account password=account'
+    networks:
+      - backend_network
+
+  account_redis:
+    image: redis:latest
+    container_name: account_redis
+    ports:
+      - "6379:6379"
+    networks:
+      - backend_network
+
+  # Transaction Service
+  transaction_primary:
+    image: postgres:13
+    container_name: transaction_primary
+    environment:
+      POSTGRES_USER: transaction
+      POSTGRES_PASSWORD: transaction
+      POSTGRES_DB: transaction
+    volumes:
+      - transaction_data:/var/lib/postgresql/data
+    ports:
+      - "5434:5432"
+    networks:
+      - backend_network
+
+  transaction_replica:
+    image: postgres:13
+    container_name: transaction_replica
+    environment:
+      POSTGRES_USER: transaction
+      POSTGRES_PASSWORD: transaction
+      POSTGRES_DB: transaction
+    volumes:
+      - transaction_replica_data:/var/lib/postgresql/data
+    ports:
+      - "5435:5432"
+    depends_on:
+      - transaction_primary
+    command: >
+      -c wal_level=replica
+      -c hot_standby=on
+      -c primary_conninfo='host=transaction_primary port=5432 user=transaction password=transaction'
+    networks:
+      - backend_network
+
+  transaction_redis:
+    image: redis:latest
+    container_name: transaction_redis
+    ports:
+      - "6380:6379"
+    networks:
+      - backend_network
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: user
+      RABBITMQ_DEFAULT_PASS: password
+    ports:
+      - "15672:15672"  # Management interface
+      - "5672:5672"    # AMQP protocol port
+    networks:
+      - backend_network
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    healthcheck:
+      test: ["CMD", "rabbitmqctl", "status"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
 
 volumes:
-  primary_data:
-  replica_data:
+  account_data:
+  account_replica_data:
+  transaction_data:
+  transaction_replica_data:
+  rabbitmq_data:
 
 networks:
-  postgres_network:
+  backend_network:
     driver: bridge

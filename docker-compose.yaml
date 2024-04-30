@@ -1,0 +1,49 @@
+version: '3.8'
+
+services:
+  postgres_primary:
+    image: postgres:13
+    container_name: postgres_primary
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: mydatabase
+      POSTGRES_HOST_AUTH_METHOD: trust
+    volumes:
+      - primary_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - postgres_network
+    command: >
+      -c wal_level=replica
+      -c max_wal_senders=10
+      -c max_replication_slots=10
+
+  postgres_replica:
+    image: postgres:13
+    container_name: postgres_replica
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: mydatabase
+    volumes:
+      - replica_data:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
+    depends_on:
+      - postgres_primary
+    networks:
+      - postgres_network
+    command: >
+      -c wal_level=replica
+      -c hot_standby=on
+      -c primary_conninfo='host=postgres_primary port=5432 user=postgres password=postgres'
+
+volumes:
+  primary_data:
+  replica_data:
+
+networks:
+  postgres_network:
+    driver: bridge

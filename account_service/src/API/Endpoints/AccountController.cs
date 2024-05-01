@@ -58,6 +58,14 @@ public class AccountsController : ControllerBase
         return accountDto;
     }
 
+    [HttpGet("get-balance-by-id")]
+    public ActionResult<decimal> GetBalanceById(string id)
+    {
+        var balance = _accountRepository.GetBalance(id);
+
+        return balance;
+    }
+
     [HttpPost("create-account")]
     public IActionResult CreateAccount(CreateAccountRequest request)
     {

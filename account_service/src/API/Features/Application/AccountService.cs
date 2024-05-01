@@ -70,6 +70,21 @@ public class AccountService : IAccountService
         }
     }
 
+    public async Task<ServiceResult<decimal>> GetBalanceByIdAsync(string id)
+    {
+        try
+        {
+            var balance = await _accountRepository.GetBalanceAsync(id);
+
+            return ServiceResult<decimal>.Success(balance);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex,"Failed to get balance of account {id}", id);
+            return ServiceResult<decimal>.Failure($"Failed to get balance of account {id}.");
+        }
+    }
+    
     public async Task<ServiceResult> CreateAccountAsync(CreateAccountRequest request)
     {
         try
@@ -90,21 +105,6 @@ public class AccountService : IAccountService
         {
             _logger.LogError(ex,"Request {RequestId} failed to create account", request.RequestId);
             return ServiceResult.Failure("Failed to create account.");
-        }
-    }
-
-    public async Task<ServiceResult<decimal>> GetBalanceByIdAsync(string id)
-    {
-        try
-        {
-            var balance = await _accountRepository.GetBalanceAsync(id);
-
-            return ServiceResult<decimal>.Success(balance);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex,"Failed to get balance of account {id}", id);
-            return ServiceResult<decimal>.Failure($"Failed to get balance of account {id}.");
         }
     }
 }

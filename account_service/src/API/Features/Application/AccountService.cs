@@ -99,7 +99,7 @@ public class AccountService : IAccountService
             await _accountRepository.CreateAccountAsync(account);
             
             _logger.LogInformation("Request {RequestId} successfully created an account!", request.RequestId);
-            return ServiceResult.Success("Account Created Successfully!");
+            return ServiceResult.Success($"Account {account.Id} Created Successfully!");
         }
         catch (Exception ex)
         {

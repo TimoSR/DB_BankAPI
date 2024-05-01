@@ -1,6 +1,10 @@
-@API_HostAddress = http://localhost:5049
+@API_HostAddress = https://localhost:7101
 
-GET {{API_HostAddress}}/weatherforecast/
+### Create Account
+POST {{API_HostAddress}}/account/create-account
+Content-Type: application/json
 Accept: application/json
 
-###
+### Get All Accounts
+GET {{API_HostAddress}}/account/get-all-accounts
+Accept: application/json

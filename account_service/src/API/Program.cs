@@ -1,10 +1,15 @@
-using API.Features.CreateAccount.Contexts;
+using API.Features.CreateAccount.Domain;
+using API.Features.CreateAccount.Infrastructure.Contexts;
+using API.Features.CreateAccount.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddDbContext<AccountContext>(options =>
+builder.Services.AddDbContext<AccountContext>(options => 
     options.UseNpgsql(builder.Configuration.GetConnectionString("AccountDbContext")));
+
+builder.Services.AddScoped<IAccountRepository, AccountRepository>();
+builder.Services.AddScoped<IAccountSecurityDomainService, AccountSecurityDomainService>();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();

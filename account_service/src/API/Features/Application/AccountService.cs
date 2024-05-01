@@ -16,60 +16,88 @@ public class AccountService : IAccountService
         _security = security;
     }
     
-    public ServiceResult<List<AccountDto>> GetAllAccounts()
+    public ServiceResult<List<AccountDTO>> GetAllAccounts()
     {
-        var accounts = _accountRepository.GetAccounts();
-        var accountDTOs = new List<AccountDto>(); 
-            
-        foreach (var account in accounts)
+        try
         {
-            accountDTOs.Add(new AccountDto()
+            var accounts = _accountRepository.GetAccounts();
+            var accountDTOs = new List<AccountDTO>(); 
+            
+            foreach (var account in accounts)
+            {
+                accountDTOs.Add(new AccountDTO()
+                {
+                    Id = account.Id,
+                    CPR = account.CPR,
+                    FirstName = account.FirstName,
+                    LastName = account.LastName,
+                    Balance = account.Balance
+                });
+            }
+            
+            return ServiceResult<List<AccountDTO>>.Success(accountDTOs);
+        }
+        catch
+        {
+            return ServiceResult<List<AccountDTO>>.Failure("Failed to get accounts.");
+        }
+    }
+
+    public ServiceResult<AccountDTO> GetAccountById(string id)
+    {
+        try
+        {
+            var account = _accountRepository.GetAccount(id);
+        
+            var accountDTO = new AccountDTO()
             {
                 Id = account.Id,
                 CPR = account.CPR,
                 FirstName = account.FirstName,
                 LastName = account.LastName,
                 Balance = account.Balance
-            });
+            };
+        
+            return ServiceResult<AccountDTO>.Success(accountDTO);
         }
-
-        return ServiceResult<List<AccountDto>>.Success(accountDTOs);
-    }
-
-    public ServiceResult<AccountDto> GetAccountById(string id)
-    {
-        var account = _accountRepository.GetAccount(id);
-        
-        var accountDto = new AccountDto()
+        catch
         {
-            Id = account.Id,
-            CPR = account.CPR,
-            FirstName = account.FirstName,
-            LastName = account.LastName,
-            Balance = account.Balance
-        };
-        
-        return ServiceResult<AccountDto>.Success(accountDto);
+            return ServiceResult<AccountDTO>.Failure($"Failed to get account with ID: {id}");
+        }
     }
 
     public ServiceResult CreateAccount(CreateAccountRequest request)
     {
-        var account = new Account()
+        try
         {
-            CPR = _security.Hash(request.CPR),
-            FirstName = request.FirstName,
-            LastName = request.LastName
-        };
+            var account = new Account()
+            {
+                CPR = _security.Hash(request.CPR),
+                FirstName = request.FirstName,
+                LastName = request.LastName
+            };
         
-        _accountRepository.CreateAccount(account);
+            _accountRepository.CreateAccount(account);
 
-        return ServiceResult.Success("Account Created Successfully!");
+            return ServiceResult.Success("Account Created Successfully!");
+        }
+        catch
+        {
+            return ServiceResult.Failure("Failed to create account.");
+        }
     }
 
     public ServiceResult<decimal> GetBalanceById(string id)
     {
-        var balance = _accountRepository.GetBalance(id);
+        try
+        {
+            var balance = _accountRepository.GetBalance(id);
 
-        return ServiceResult<decimal>.Success(balance);
+            return ServiceResult<decimal>.Success(balance);
+        }
+        catch
+        {
+            return ServiceResult<decimal>.Failure("Failed to get balance.");
+        }
     }
 }

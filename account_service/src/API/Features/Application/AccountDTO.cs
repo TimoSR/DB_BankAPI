@@ -2,7 +2,7 @@ using API.Features.CreateAccount.Domain;
 
 namespace API.Features.Application;
 
-public record AccountDto : IAccount
+public record AccountDTO : IAccount
 {
     public string Id { get; set; }
     public string CPR { get; set; }

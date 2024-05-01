@@ -19,10 +19,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Features\" />
-    </ItemGroup>
-
-    <ItemGroup>
       <ProjectReference Include="..\CodeContracts\CodeContracts.csproj" />
     </ItemGroup>
 

@@ -5,6 +5,7 @@ namespace CodeContracts.DDD;
 
 public abstract class AggregateRoot : IAggregateRoot
 {
+    // Auto generates the guid as default, but custom ID can be set
     public string Id { get; set; } = new Guid().ToString();
 
     [NotMapped] public List<INotification>? DomainEvents { get; private set; }

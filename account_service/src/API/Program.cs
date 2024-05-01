@@ -1,4 +1,4 @@
-using API.Infrastructure;
+using API.Features.CreateAccount.Contexts;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -24,7 +24,6 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
-    // Ensure the database is created at startup during development
 }
 
 if (app.Environment.IsDevelopment())

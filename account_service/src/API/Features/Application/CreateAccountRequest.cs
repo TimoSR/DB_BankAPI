@@ -1,7 +1,7 @@
 using API.Features.CreateAccount.Domain;
 using CodeContracts.Application;
 
-namespace API.Features.CreateAccount.Application;
+namespace API.Features.Application;
 
 public class CreateAccountRequest : Request, IAccount
 {

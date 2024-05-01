@@ -1,3 +1,4 @@
+using API.Features.Application;
 using API.Features.CreateAccount.Domain;
 using API.Features.CreateAccount.Infrastructure.Contexts;
 using API.Features.CreateAccount.Infrastructure.Repositories;
@@ -10,6 +11,7 @@ builder.Services.AddDbContext<AccountContext>(options =>
 
 builder.Services.AddScoped<IAccountRepository, AccountRepository>();
 builder.Services.AddScoped<IAccountSecurityDomainService, AccountSecurityDomainService>();
+builder.Services.AddScoped<IAccountService, AccountService>();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();

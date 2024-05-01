@@ -13,8 +13,7 @@ public class AccountsController : ControllerBase
 
     public AccountsController(
         IAccountRepository accountRepository,
-        IAccountSecurityDomainService security
-        )
+        IAccountSecurityDomainService security)
     {
         _accountRepository = accountRepository;
         _security = security;

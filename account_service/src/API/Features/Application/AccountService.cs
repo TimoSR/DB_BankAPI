@@ -39,9 +39,9 @@ public class AccountService : IAccountService
             }
             return ServiceResult<List<AccountDTO>>.Success(accountDTOs);
         }
-        catch
+        catch (Exception ex)
         {
-            _logger.LogWarning("Failed to get accounts.");
+            _logger.LogError(ex, "Failed to get accounts.");
             return ServiceResult<List<AccountDTO>>.Failure("Failed to get accounts.");
         }
     }
@@ -63,9 +63,9 @@ public class AccountService : IAccountService
         
             return ServiceResult<AccountDTO>.Success(accountDTO);
         }
-        catch
+        catch (Exception ex)
         {
-            _logger.LogWarning("Failed to get account with ID {id}", id);
+            _logger.LogError(ex,"Failed to get account with ID {id}", id);
             return ServiceResult<AccountDTO>.Failure($"Failed to get account with {id}");
         }
     }
@@ -86,9 +86,9 @@ public class AccountService : IAccountService
             _logger.LogInformation("Request {RequestId} successfully created an account!", request.RequestId);
             return ServiceResult.Success("Account Created Successfully!");
         }
-        catch
+        catch (Exception ex)
         {
-            _logger.LogWarning("Request {RequestId} failed to create account", request.RequestId);
+            _logger.LogError(ex,"Request {RequestId} failed to create account", request.RequestId);
             return ServiceResult.Failure("Failed to create account.");
         }
     }
@@ -101,9 +101,9 @@ public class AccountService : IAccountService
 
             return ServiceResult<decimal>.Success(balance);
         }
-        catch
+        catch (Exception ex)
         {
-            _logger.LogWarning("Failed to get balance of account {id}", id);
+            _logger.LogError(ex,"Failed to get balance of account {id}", id);
             return ServiceResult<decimal>.Failure($"Failed to get balance of account {id}.");
         }
     }

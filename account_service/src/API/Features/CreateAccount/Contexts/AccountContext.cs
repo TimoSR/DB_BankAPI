@@ -1,25 +1,26 @@
-using API.Features.CreateAccount.Domain;
 using Microsoft.EntityFrameworkCore;
+using API.Features.CreateAccount.Domain;
 
 namespace API.Features.CreateAccount.Contexts;
 
-public class AccountContext : DbContext
+public class AccountContext(DbContextOptions<AccountContext> options) : DbContext(options)
 {
-    public DbSet<Account> SavingsAccounts { get; set; }
-
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    {
-        // Replace 'YourConnectionString' with your actual connection string.
-        optionsBuilder.UseNpgsql(@"Server=(localdb)\mssqllocaldb;Database=BankDB;Trusted_Connection=True;");
-    }
+    public DbSet<Account> Accounts { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<Account>().ToTable("SavingsAccounts");
-        modelBuilder.Entity<Account>().HasKey(sa => sa.Id);
-        modelBuilder.Entity<Account>().Property(sa => sa.CPR).IsRequired();
-        modelBuilder.Entity<Account>().Property(sa => sa.Name).IsRequired().HasMaxLength(100);
-        modelBuilder.Entity<Account>().Property(sa => sa.Balance).HasColumnType("decimal(18,2)");
+        ConfigureAccountEntity(modelBuilder);
     }
-    
+
+    private void ConfigureAccountEntity(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Account>(entity =>
+        {
+            entity.ToTable("Accounts");
+            entity.HasKey(a => a.Id);
+            entity.Property(a => a.CPR).IsRequired();
+            entity.Property(a => a.Name).IsRequired().HasMaxLength(100);
+            entity.Property(a => a.Balance).HasColumnType("decimal(18,2)");
+        });
+    }
 }

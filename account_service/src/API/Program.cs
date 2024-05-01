@@ -3,6 +3,9 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddDbContext<AccountContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("AccountDbContext")));
+
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

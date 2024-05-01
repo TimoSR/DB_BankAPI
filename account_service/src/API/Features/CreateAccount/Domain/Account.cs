@@ -2,7 +2,7 @@ using CodeContracts.DDD;
 
 namespace API.Features.CreateAccount.Domain;
 
-public class Account : AggregateRoot, ISavingsAccount
+public class Account : AggregateRoot, IAccount
 {
     public string CPR { get; set; }
     public string Name { get; set; }

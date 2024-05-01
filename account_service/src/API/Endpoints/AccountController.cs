@@ -6,12 +6,12 @@ namespace API.Endpoints;
 
 [ApiController]
 [Route("[controller]")]
-public class AccountsController : ControllerBase
+public class AccountController : ControllerBase
 {
     private readonly IAccountRepository _accountRepository;
     private readonly IAccountSecurityDomainService _security;
 
-    public AccountsController(
+    public AccountController(
         IAccountRepository accountRepository,
         IAccountSecurityDomainService security)
     {

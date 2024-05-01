@@ -16,11 +16,11 @@ public class AccountService : IAccountService
         _security = security;
     }
     
-    public ServiceResult<List<AccountDTO>> GetAllAccounts()
+    public async Task<ServiceResult<List<AccountDTO>>> GetAllAccountsAsync()
     {
         try
         {
-            var accounts = _accountRepository.GetAccounts();
+            var accounts = await _accountRepository.GetAccountsAsync();
             var accountDTOs = new List<AccountDTO>(); 
             
             foreach (var account in accounts)
@@ -43,11 +43,11 @@ public class AccountService : IAccountService
         }
     }
 
-    public ServiceResult<AccountDTO> GetAccountById(string id)
+    public async Task<ServiceResult<AccountDTO>> GetAccountByIdAsync(string id)
     {
         try
         {
-            var account = _accountRepository.GetAccount(id);
+            var account = await _accountRepository.GetAccountAsync(id);
         
             var accountDTO = new AccountDTO()
             {
@@ -66,7 +66,7 @@ public class AccountService : IAccountService
         }
     }
 
-    public ServiceResult CreateAccount(CreateAccountRequest request)
+    public async Task<ServiceResult> CreateAccountAsync(CreateAccountRequest request)
     {
         try
         {
@@ -77,7 +77,7 @@ public class AccountService : IAccountService
                 LastName = request.LastName
             };
         
-            _accountRepository.CreateAccount(account);
+            await _accountRepository.CreateAccountAsync(account);
 
             return ServiceResult.Success("Account Created Successfully!");
         }
@@ -87,11 +87,11 @@ public class AccountService : IAccountService
         }
     }
 
-    public ServiceResult<decimal> GetBalanceById(string id)
+    public async Task<ServiceResult<decimal>> GetBalanceByIdAsync(string id)
     {
         try
         {
-            var balance = _accountRepository.GetBalance(id);
+            var balance = await _accountRepository.GetBalanceAsync(id);
 
             return ServiceResult<decimal>.Success(balance);
         }

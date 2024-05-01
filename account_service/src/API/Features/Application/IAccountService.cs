@@ -4,8 +4,8 @@ namespace API.Features.Application;
 
 public interface IAccountService
 {
-    ServiceResult<List<AccountDTO>> GetAllAccounts();
-    ServiceResult<AccountDTO> GetAccountById(string id);
-    ServiceResult<decimal> GetBalanceById(string id);
-    ServiceResult CreateAccount(CreateAccountRequest request);
+    Task<ServiceResult<List<AccountDTO>>> GetAllAccountsAsync();
+    Task<ServiceResult<AccountDTO>> GetAccountByIdAsync(string id);
+    Task<ServiceResult<decimal>> GetBalanceByIdAsync(string id);
+    Task<ServiceResult> CreateAccountAsync(CreateAccountRequest request);
 }

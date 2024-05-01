@@ -1,5 +1,6 @@
 using API.Features.Domain;
 using API.Features.Infrastructure.Contexts;
+using Microsoft.EntityFrameworkCore;
 
 namespace API.Features.Infrastructure.Repositories;
 
@@ -12,29 +13,33 @@ public class AccountRepository : IAccountRepository
         _context = context;
     }
 
-    public List<Account> GetAccounts()
+    // Asynchronous method to retrieve all accounts
+    public async Task<List<Account>> GetAccountsAsync()
     {
-        return _context.Accounts.ToList();
+        return await _context.Accounts.ToListAsync();
     }
 
-    public Account GetAccount(string id)
+    // Asynchronous method to retrieve a single account by ID
+    public async Task<Account> GetAccountAsync(string id)
     {
-        return _context.Accounts.Find(id);
+        return await _context.Accounts.FindAsync(id);
     }
 
-    public void CreateAccount(Account account)
+    // Asynchronous method to create a new account
+    public async Task CreateAccountAsync(Account account)
     {
         if (account == null)
         {
             throw new ArgumentNullException(nameof(account));
         }
         _context.Accounts.Add(account);
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
     }
 
-    public decimal GetBalance(string id)
+    // Asynchronous method to retrieve the balance of a specific account
+    public async Task<decimal> GetBalanceAsync(string id)
     {
-        var account = GetAccount(id);
+        var account = await GetAccountAsync(id);
         if (account == null)
         {
             throw new InvalidOperationException("Account not found");

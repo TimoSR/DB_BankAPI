@@ -22,4 +22,8 @@
       <ProjectReference Include="..\CodeContracts\CodeContracts.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Features\Application\Eventhandlers\" />
+    </ItemGroup>
+
 </Project>

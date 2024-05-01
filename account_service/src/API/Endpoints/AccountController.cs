@@ -11,26 +11,29 @@ public class AccountController(IAccountService service) : ControllerBase
     [HttpGet("get-all-accounts")]
     public ActionResult<List<AccountDto>> GetAllAccounts()
     {
-        return service.GetAllAccounts();
+        var result = service.GetAllAccounts();
+        return Ok(result.Data);
     }
 
     [HttpGet("get-account-by-id")]
     public ActionResult<AccountDto> GetAccountById(string id)
     {
-        return service.GetAccountById(id);
+        var result = service.GetAccountById(id);
+        return Ok(result.Data);
     }
 
     [HttpGet("get-balance-by-id")]
     public ActionResult<decimal> GetBalanceById(string id)
     {
-        return service.GetBalanceById(id);
+        var result = service.GetBalanceById(id);
+        return Ok(result.Data);
     }
 
     [HttpPost("create-account")]
     public IActionResult CreateAccount(CreateAccountRequest request)
     {
-        service.CreateAccount(request);
+        var result = service.CreateAccount(request);
 
-        return Ok();
+        return Ok(result.Messages);
     }
 }

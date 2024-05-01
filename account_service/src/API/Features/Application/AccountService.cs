@@ -1,4 +1,5 @@
 using API.Features.CreateAccount.Domain;
+using CodeContracts.Application.ServiceResultPattern;
 
 namespace API.Features.Application;
 
@@ -15,7 +16,7 @@ public class AccountService : IAccountService
         _security = security;
     }
     
-    public List<AccountDto> GetAllAccounts()
+    public ServiceResult<List<AccountDto>> GetAllAccounts()
     {
         var accounts = _accountRepository.GetAccounts();
         var accountDTOs = new List<AccountDto>(); 
@@ -32,10 +33,10 @@ public class AccountService : IAccountService
             });
         }
 
-        return accountDTOs;
+        return ServiceResult<List<AccountDto>>.Success(accountDTOs);
     }
 
-    public AccountDto GetAccountById(string id)
+    public ServiceResult<AccountDto> GetAccountById(string id)
     {
         var account = _accountRepository.GetAccount(id);
         
@@ -47,11 +48,11 @@ public class AccountService : IAccountService
             LastName = account.LastName,
             Balance = account.Balance
         };
-
-        return accountDto;
+        
+        return ServiceResult<AccountDto>.Success(accountDto);
     }
 
-    public void CreateAccount(CreateAccountRequest request)
+    public ServiceResult CreateAccount(CreateAccountRequest request)
     {
         var account = new Account()
         {
@@ -61,12 +62,14 @@ public class AccountService : IAccountService
         };
         
         _accountRepository.CreateAccount(account);
+
+        return ServiceResult.Success("Account Created Successfully!");
     }
 
-    public decimal GetBalanceById(string id)
+    public ServiceResult<decimal> GetBalanceById(string id)
     {
         var balance = _accountRepository.GetBalance(id);
 
-        return balance;
+        return ServiceResult<decimal>.Success(balance);
     }
 }

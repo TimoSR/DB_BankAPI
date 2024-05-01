@@ -1,6 +1,6 @@
 using CodeContracts.Application.ServiceResultPattern._Enums;
 
-namespace CodingPatterns.ApplicationLayer.ServiceResultPattern;
+namespace CodeContracts.Application.ServiceResultPattern;
 
 public class ServiceResult
 {

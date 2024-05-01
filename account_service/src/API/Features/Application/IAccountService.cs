@@ -1,11 +1,11 @@
-using API.Features.CreateAccount.Domain;
+using CodeContracts.Application.ServiceResultPattern;
 
 namespace API.Features.Application;
 
 public interface IAccountService
 {
-    List<AccountDto> GetAllAccounts();
-    AccountDto GetAccountById(string id);
-    void CreateAccount(CreateAccountRequest request);
-    decimal GetBalanceById(string id);
+    ServiceResult<List<AccountDto>> GetAllAccounts();
+    ServiceResult<AccountDto> GetAccountById(string id);
+    ServiceResult<decimal> GetBalanceById(string id);
+    ServiceResult CreateAccount(CreateAccountRequest request);
 }

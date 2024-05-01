@@ -1,4 +1,4 @@
-using CodingPatterns.ApplicationLayer.ServiceResultPattern;
+using CodeContracts.Application.ServiceResultPattern;
 
 namespace CodeContracts.Application;
 

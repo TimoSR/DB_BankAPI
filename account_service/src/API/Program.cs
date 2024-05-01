@@ -1,7 +1,7 @@
 using API.Features.Application;
-using API.Features.CreateAccount.Domain;
-using API.Features.CreateAccount.Infrastructure.Contexts;
-using API.Features.CreateAccount.Infrastructure.Repositories;
+using API.Features.Domain;
+using API.Features.Infrastructure.Contexts;
+using API.Features.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);

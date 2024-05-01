@@ -1,4 +1,4 @@
-using API.Features.CreateAccount.Domain;
+using API.Features.Domain;
 using CodeContracts.Application.ServiceResultPattern;
 
 namespace API.Features.Application;

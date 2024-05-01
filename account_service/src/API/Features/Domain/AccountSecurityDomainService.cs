@@ -1,7 +1,7 @@
 using System.Security.Cryptography;
 using System.Text;
 
-namespace API.Features.CreateAccount.Domain;
+namespace API.Features.Domain;
 
 public class AccountSecurityDomainService : IAccountSecurityDomainService
 {

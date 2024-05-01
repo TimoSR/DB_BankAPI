@@ -1,6 +1,6 @@
 using CodeContracts.DDD;
 
-namespace API.Features.CreateAccount.Domain;
+namespace API.Features.Domain;
 
 public class Account : AggregateRoot, IAccount
 {

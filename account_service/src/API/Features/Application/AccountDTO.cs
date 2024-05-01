@@ -1,4 +1,4 @@
-using API.Features.CreateAccount.Domain;
+using API.Features.Domain;
 
 namespace API.Features.Application;
 

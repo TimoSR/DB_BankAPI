@@ -1,7 +1,7 @@
-using API.Features.CreateAccount.Domain;
+using API.Features.Domain;
 using Microsoft.EntityFrameworkCore;
 
-namespace API.Features.CreateAccount.Infrastructure.Contexts;
+namespace API.Features.Infrastructure.Contexts;
 
 public class AccountContext(DbContextOptions<AccountContext> options) : DbContext(options)
 {

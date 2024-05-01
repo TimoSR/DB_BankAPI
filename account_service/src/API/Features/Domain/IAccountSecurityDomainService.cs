@@ -1,4 +1,4 @@
-namespace API.Features.CreateAccount.Domain;
+namespace API.Features.Domain;
 
 public interface IAccountSecurityDomainService
 {

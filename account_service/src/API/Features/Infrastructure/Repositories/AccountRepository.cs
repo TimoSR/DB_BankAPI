@@ -1,7 +1,7 @@
-using API.Features.CreateAccount.Domain;
-using API.Features.CreateAccount.Infrastructure.Contexts;
+using API.Features.Domain;
+using API.Features.Infrastructure.Contexts;
 
-namespace API.Features.CreateAccount.Infrastructure.Repositories;
+namespace API.Features.Infrastructure.Repositories;
 
 public class AccountRepository : IAccountRepository
 {

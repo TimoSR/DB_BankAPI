@@ -7,12 +7,10 @@ namespace API.Endpoints;
 public class AccountController : ControllerBase
 {
     public AccountController() {}
-
-    [HttpGet("get-hello-world")]
-    public IActionResult GetHelloWorld()
+    
+    [HttpPut("create-account")]
+    public IActionResult CreateAccount()
     {
-        var hello = "Hello World";
-        
-        return Ok(hello);
+        throw new NotImplementedException();
     }
 }

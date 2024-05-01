@@ -19,8 +19,8 @@ public class AccountsController : ControllerBase
         _security = security;
     }
 
-    [HttpGet]
-    public ActionResult<List<AccountDto>> Get()
+    [HttpGet("get-all-accounts")]
+    public ActionResult<List<AccountDto>> GetAllAccounts()
     {
         
         var accounts = _accountRepository.GetAccounts();
@@ -41,8 +41,25 @@ public class AccountsController : ControllerBase
         return accountDTOs;
     }
 
-    [HttpPost]
-    public IActionResult Create(CreateAccountRequest request)
+    [HttpGet("get-account-by-id")]
+    public ActionResult<AccountDto> GetAccountById(string id)
+    {
+        var account = _accountRepository.GetAccount(id);
+        
+        var accountDto = new AccountDto()
+        {
+            Id = account.Id,
+            CPR = account.CPR,
+            FirstName = account.FirstName,
+            LastName = account.LastName,
+            Balance = account.Balance
+        };
+
+        return accountDto;
+    }
+
+    [HttpPost("create-account")]
+    public IActionResult CreateAccount(CreateAccountRequest request)
     {
         var account = new Account()
         {

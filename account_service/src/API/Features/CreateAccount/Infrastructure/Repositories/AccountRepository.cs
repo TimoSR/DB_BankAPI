@@ -19,11 +19,7 @@ public class AccountRepository : IAccountRepository
 
     public Account GetAccount(string id)
     {
-        if (!int.TryParse(id, out var accountId))
-        {
-            throw new ArgumentException("Invalid account ID format", nameof(id));
-        }
-        return _context.Accounts.Find(accountId);
+        return _context.Accounts.Find(id);
     }
 
     public void CreateAccount(Account account)

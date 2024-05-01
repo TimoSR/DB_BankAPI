@@ -7,13 +7,16 @@ public class AccountService : IAccountService
 {
     private readonly IAccountRepository _accountRepository;
     private readonly IAccountSecurityDomainService _security;
+    private readonly ILogger<AccountService> _logger; 
 
     public AccountService( 
         IAccountRepository accountRepository,
-        IAccountSecurityDomainService security)
+        IAccountSecurityDomainService security,
+        ILogger<AccountService> logger)
     {
         _accountRepository = accountRepository;
         _security = security;
+        _logger = logger;
     }
     
     public async Task<ServiceResult<List<AccountDTO>>> GetAllAccountsAsync()
@@ -34,7 +37,6 @@ public class AccountService : IAccountService
                     Balance = account.Balance
                 });
             }
-            
             return ServiceResult<List<AccountDTO>>.Success(accountDTOs);
         }
         catch
@@ -76,13 +78,15 @@ public class AccountService : IAccountService
                 FirstName = request.FirstName,
                 LastName = request.LastName
             };
-        
+            
             await _accountRepository.CreateAccountAsync(account);
-
+            
+            _logger.LogInformation("Request {RequestId} successfully created an account!", request.RequestId);
             return ServiceResult.Success("Account Created Successfully!");
         }
         catch
         {
+            _logger.LogWarning("Request {RequestId} Failed to create account", request.RequestId);
             return ServiceResult.Failure("Failed to create account.");
         }
     }

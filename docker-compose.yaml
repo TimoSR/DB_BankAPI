@@ -16,26 +16,6 @@ services:
     networks:
       - backend_network
 
-  account_replica:
-    image: postgres:13
-    container_name: account_replica
-    environment:
-      POSTGRES_USER: account
-      POSTGRES_PASSWORD: account
-      POSTGRES_DB: account
-    volumes:
-      - account_replica_data:/var/lib/postgresql/data
-    ports:
-      - "5433:5432"
-    depends_on:
-      - account_primary
-    command: >
-      -c wal_level=replica
-      -c hot_standby=on
-      -c primary_conninfo='host=account_primary port=5432 user=account password=account'
-    networks:
-      - backend_network
-
   account_redis:
     image: redis:latest
     container_name: account_redis
@@ -56,26 +36,6 @@ services:
       - transaction_data:/var/lib/postgresql/data
     ports:
       - "5434:5432"
-    networks:
-      - backend_network
-
-  transaction_replica:
-    image: postgres:13
-    container_name: transaction_replica
-    environment:
-      POSTGRES_USER: transaction
-      POSTGRES_PASSWORD: transaction
-      POSTGRES_DB: transaction
-    volumes:
-      - transaction_replica_data:/var/lib/postgresql/data
-    ports:
-      - "5435:5432"
-    depends_on:
-      - transaction_primary
-    command: >
-      -c wal_level=replica
-      -c hot_standby=on
-      -c primary_conninfo='host=transaction_primary port=5432 user=transaction password=transaction'
     networks:
       - backend_network
 

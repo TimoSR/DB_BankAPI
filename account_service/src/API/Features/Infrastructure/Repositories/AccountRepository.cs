@@ -25,9 +25,11 @@ public class AccountRepository : IAccountRepository
     }
 
     // Asynchronous method to retrieve a single account by ID
-    public async Task<Account> GetAccountAsync(string id)
+    public async Task<Account?> GetAccountAsync(string id)
     {
-        return await _context.Accounts.FindAsync(id);
+        var result = await _context.Accounts.FindAsync(id);
+
+        return result;
     }
 
     // Asynchronous method to retrieve the balance of a specific account
@@ -48,7 +50,8 @@ public class AccountRepository : IAccountRepository
         {
             throw new ArgumentNullException(nameof(account));
         }
-        _context.Accounts.Add(account);
+        
+        await _context.Accounts.AddAsync(account);
         await _context.SaveChangesAsync();
         await _dispatcher.DispatchEventsAsync(account);
     }

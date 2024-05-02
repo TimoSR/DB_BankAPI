@@ -11,7 +11,9 @@ public class Account : AggregateRoot, IAccount
     
     public void Initialize()
     {
-        // Potentially additional initialization logic here
+        if (string.IsNullOrEmpty(CPR) || string.IsNullOrEmpty(FirstName) || string.IsNullOrEmpty(LastName))
+            throw new InvalidOperationException("Cannot initialize account because one or more required properties are not set.");
+        
         AddDomainEvent(new AccountCreatedEvent(Id, DateTime.Now));
     }
 }

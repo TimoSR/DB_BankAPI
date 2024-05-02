@@ -1,5 +1,7 @@
 using API.Features.Application;
+using API.Features.Application.Eventhandlers;
 using API.Features.Domain;
+using API.Features.Infrastructure;
 using API.Features.Infrastructure.Contexts;
 using API.Features.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -8,6 +10,18 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<AccountContext>(options => 
     options.UseNpgsql(builder.Configuration.GetConnectionString("AccountDbContext")));
+
+// Register RabbitMQ service
+builder.Services.AddSingleton<RabbitMQService>(serviceProvider => {
+    var configuration = serviceProvider.GetRequiredService<IConfiguration>();
+    var rabbitMQService = new RabbitMQService(configuration);
+    
+    rabbitMQService.SetupQueue("accountEvents");
+    
+    return rabbitMQService;
+});
+
+builder.Services.AddTransient<AccountCreatedHandler>();
 
 builder.Services.AddScoped<IAccountRepository, AccountRepository>();
 builder.Services.AddScoped<IAccountSecurityDomainService, AccountSecurityDomainService>();

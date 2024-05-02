@@ -3,7 +3,7 @@ using System.Text;
 
 namespace API.Features.Domain;
 
-public class AccountSecurityDomainService : IAccountSecurityDomainService
+public class AccountSecurityService : IAccountSecurityDomainService
 {
     public string Hash(string cpr)
     {

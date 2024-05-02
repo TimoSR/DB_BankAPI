@@ -14,7 +14,9 @@ builder.Services.AddDbContext<AccountContext>(options =>
 
 // Register RabbitMQ service
 builder.Services.AddSingleton<RabbitMQService>(serviceProvider => 
-    new RabbitMQService(serviceProvider.GetRequiredService<IConfiguration>()));
+    new RabbitMQService(
+        serviceProvider.GetRequiredService<IConfiguration>(),
+        serviceProvider.GetRequiredService<ILogger<RabbitMQService>>()));
 
 // Adding Mediator
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<Program>());

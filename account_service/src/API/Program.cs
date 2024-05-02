@@ -57,14 +57,22 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+}
 
+if (app.Environment.IsDevelopment())
+{
+    // Ensure databases are created at startup during development
     using var scope = app.Services.CreateScope();
     var serviceProvider = scope.ServiceProvider;
-
     CreateDatabases(serviceProvider);
+}
 
+if (app.Environment.IsDevelopment())
+{
     app.Lifetime.ApplicationStopping.Register(() =>
     {
+        using var scope = app.Services.CreateScope();
+        var serviceProvider = scope.ServiceProvider;
         DeleteDatabases(serviceProvider);
     });
 }

@@ -22,7 +22,7 @@ public class AccountCreatedHandler : INotificationHandler<AccountCreatedEvent>
 
     public async Task Handle(AccountCreatedEvent notification, CancellationToken cancellationToken)
     {
-        _logger.LogInformation($"Auction completed: {notification.Message}");
+        _logger.LogInformation($"Account Created: {notification.Message}");
 
         var integrationEvent = new
         {
@@ -38,6 +38,6 @@ public class AccountCreatedHandler : INotificationHandler<AccountCreatedEvent>
             basicProperties: null,
             body: messageBody);
 
-        _logger.LogInformation("Published to RabbitMQ: AuctionCompletedEvent");
+        _logger.LogInformation("Published to RabbitMQ: AccountCreatedEvent");
     }
 }

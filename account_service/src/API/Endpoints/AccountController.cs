@@ -7,28 +7,28 @@ namespace API.Endpoints;
 [Route("[controller]")]
 public class AccountController(IAccountService service) : ControllerBase
 {
-    [HttpGet("get-all-accounts")]
-    public async Task<ActionResult<List<AccountDTO>>> GetAllAccounts()
+    [HttpGet("GetAll")]
+    public async Task<ActionResult<List<AccountDTO>>> GetAll()
     {
         var result = await service.GetAllAccountsAsync();
         return Ok(result.Data);
     }
 
-    [HttpGet("get-account-by-id")]
-    public async Task<ActionResult<AccountDTO>> GetAccountById(string id)
+    [HttpGet("GetById")]
+    public async Task<ActionResult<AccountDTO>> GetById(string id)
     {
         var result = await service.GetAccountByIdAsync(id);
         return Ok(result.Data);
     }
 
-    [HttpGet("get-balance-by-id")]
+    [HttpGet("GetBalanceById")]
     public async Task<ActionResult<decimal>> GetBalanceById(string id)
     {
         var result = await service.GetBalanceByIdAsync(id);
         return Ok(result.Data);
     }
 
-    [HttpPost("create-account")]
+    [HttpPost("CreateAccount")]
     public async Task<IActionResult> CreateAccount(CreateAccountRequest request)
     {
         var result = await service.CreateAccountAsync(request);

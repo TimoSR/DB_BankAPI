@@ -31,7 +31,6 @@ public class AccountService : IAccountService
                 accountDTOs.Add(new AccountDTO()
                 {
                     Id = account.Id,
-                    CPR = account.CPR,
                     FirstName = account.FirstName,
                     LastName = account.LastName,
                     Balance = account.Balance
@@ -55,7 +54,6 @@ public class AccountService : IAccountService
             var accountDTO = new AccountDTO()
             {
                 Id = account.Id,
-                CPR = account.CPR,
                 FirstName = account.FirstName,
                 LastName = account.LastName,
                 Balance = account.Balance

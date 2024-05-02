@@ -96,6 +96,8 @@ public class AccountService : IAccountService
                 LastName = request.LastName
             };
             
+            account.Initialize();
+            
             await _accountRepository.CreateAccountAsync(account);
             
             _logger.LogInformation("Request {RequestId} successfully created an account!", request.RequestId);

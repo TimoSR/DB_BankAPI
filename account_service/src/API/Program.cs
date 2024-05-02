@@ -16,9 +16,10 @@ builder.Services.AddDbContext<AccountContext>(options =>
 builder.Services.AddSingleton<RabbitMQService>(serviceProvider => 
     new RabbitMQService(serviceProvider.GetRequiredService<IConfiguration>()));
 
-//Adding Mediator
+// Adding Mediator
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<Program>());
 
+// Domain Event Dispatcher handled by RabbitMQ
 builder.Services.AddSingleton<IDomainEventDispatcher, DomainEventDispatcher>();
 
 builder.Services.AddTransient<AccountCreatedHandler>();

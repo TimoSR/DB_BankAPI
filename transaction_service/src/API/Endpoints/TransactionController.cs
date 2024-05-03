@@ -9,14 +9,14 @@ namespace API.Endpoints;
 public class TransactionController(ITransactionService service) : ControllerBase
 {
     [HttpGet("GetAll")]
-    public async Task<ActionResult<List<Transaction>>> GetAll()
+    public async Task<ActionResult<List<TransactionDTO>>> GetAll()
     {
         var result = await service.GetAllTransactionsAsync();
         return Ok(result.Data);
     }
 
     [HttpGet("GetById")]
-    public async Task<ActionResult<Transaction>> GetById(string id)
+    public async Task<ActionResult<TransactionDTO>> GetById(string id)
     {
         var result = await service.GetTransactionByIdAsync(id);
         return Ok(result.Data);

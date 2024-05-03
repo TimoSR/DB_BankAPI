@@ -1,35 +1,83 @@
 using API.Features.Domain;
 using FluentAssertions;
-
-// Ensure this is correctly using your namespace
+using Moq;
 
 namespace UnitTests
 {
     [TestFixture]
     public class AccountTests
     {
+        private Account _account;
+        private Guid _requestId;
+        private Mock<IAccount> _mockAccount;
+
+        [SetUp]
+        public void Setup()
+        {
+            _account = new Account();
+            _requestId = Guid.NewGuid();
+            _mockAccount = new Mock<IAccount>();
+        }
+
         [Test]
-        public void Account_Should_Initialize_With_Correct_Values()
+        public void CreateAccount_WithAllPropertiesSet_ShouldNotThrowException()
         {
             // Arrange
-            var cpr = "123456-7890";
-            var firstName = "John";
-            var lastName = "Doe";
-            var balance = 0;
+            _account.CPR = "1234567890";
+            _account.FirstName = "John";
+            _account.LastName = "Doe";
 
             // Act
-            var account = new Account
-            {
-                CPR = cpr,
-                FirstName = firstName,
-                LastName = lastName,
-            };
+            Action act = () => _account.CreateAccount(_requestId);
 
             // Assert
-            account.CPR.Should().Be(cpr, because: "CPR should be set correctly during initialization.");
-            account.FirstName.Should().Be(firstName, because: "FirstName should be set correctly during initialization.");
-            account.LastName.Should().Be(lastName, because: "LastName should be set correctly during initialization.");
-            account.Balance.Should().Be(balance, because: "Balance should be set correctly and be immutable after initialization.");
+            act.Should().NotThrow<InvalidOperationException>();
+            _account.DomainEvents.Should().ContainSingle(e => e.GetType() == typeof(AccountCreatedEvent));
+        }
+
+        [Test]
+        public void CreateAccount_WithMissingProperties_ShouldThrowInvalidOperationException()
+        {
+            // Arrange
+            _account.CPR = "1234567890";
+            _account.FirstName = null;  // Missing first name
+
+            // Act
+            Action act = () => _account.CreateAccount(_requestId);
+
+            // Assert
+            act.Should().Throw<InvalidOperationException>().WithMessage("Cannot create account because one or more required properties are not set.");
+        }
+
+        [Test]
+        public void UpdateBalance_WithNonZeroAmount_ShouldNotThrowException()
+        {
+            // Arrange
+            _account.CPR = "1234567890";
+            _account.FirstName = "John";
+            _account.LastName = "Doe";
+            decimal amount = 100m;
+
+            // Act
+            Action act = () => _account.UpdateBalance(_requestId, amount);
+
+            // Assert
+            act.Should().NotThrow<InvalidOperationException>();
+            _account.Balance.Should().Be(amount);
+            _account.DomainEvents.Should().ContainSingle(e => e.GetType() == typeof(BalanceUpdatedEvent));
+        }
+
+        [Test]
+        public void UpdateBalance_WithZeroAmount_ShouldThrowInvalidOperationException()
+        {
+            // Arrange
+            decimal amount = 0;
+
+            // Act
+            Action act = () => _account.UpdateBalance(_requestId, amount);
+
+            // Assert
+            act.Should().Throw<InvalidOperationException>().WithMessage("Cannot update account balance as the value 0 is not a valid input.");
         }
     }
 }

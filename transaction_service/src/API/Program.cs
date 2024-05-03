@@ -1,13 +1,46 @@
 using API.Features.Application;
+using API.Features.Application.Eventhandlers;
 using API.Features.Domain;
+using API.Features.Infrastructure;
 using API.Features.Infrastructure.Contexts;
 using API.Features.Infrastructure.Repositories;
+using CodeContracts.Infrastructure;
 using Microsoft.EntityFrameworkCore;
+using RabbitMQ.Client;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddDbContext<AccountContext>(options => 
+    options.UseNpgsql(builder.Configuration.GetConnectionString("AccountDbContext")));
 
+// Register RabbitMQ service
+builder.Services.AddSingleton<RabbitMQService>(serviceProvider => {
+    var config = serviceProvider.GetRequiredService<IConfiguration>();
+    var logger = serviceProvider.GetRequiredService<ILogger<RabbitMQService>>();
+    var rabbitMQConfig = config.GetSection("RabbitMQ");
+    var factory = new ConnectionFactory() {
+        HostName = rabbitMQConfig.GetValue<string>("HostName"),
+        Port = rabbitMQConfig.GetValue<int>("Port"),
+        UserName = rabbitMQConfig.GetValue<string>("UserName"),
+        Password = rabbitMQConfig.GetValue<string>("Password")
+    };
+    return new RabbitMQService(factory, logger);
+});
 
+builder.Services.AddHostedService<QueueSetupHostedService>();
+builder.Services.AddHostedService<RabbitMQConsumerService>();
+
+// Adding Mediator
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<Program>());
+
+// Domain Event Dispatcher handled by RabbitMQ
+builder.Services.AddSingleton<IDomainEventDispatcher, DomainEventDispatcher>();
+
+builder.Services.AddTransient<AccountCreatedHandler>();
+
+builder.Services.AddScoped<IAccountRepository, AccountRepository>();
+builder.Services.AddScoped<IAccountSecurityDomainService, AccountSecurityService>();
+builder.Services.AddScoped<IAccountService, AccountService>();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -25,6 +58,13 @@ builder.Services.AddCors(options =>
 });
 
 var app = builder.Build();
+
+// Settings for RabbitMQ
+var rabbitMqService = app.Services.GetRequiredService<RabbitMQService>();
+
+rabbitMqService.SetupQueue("accountEvents");
+
+// Swagger Docs, Database Setup & Delete 
 
 if (app.Environment.IsDevelopment())
 {
@@ -53,7 +93,7 @@ if (app.Environment.IsDevelopment())
 void CreateDatabases(IServiceProvider serviceProvider)
 {
     var contexts = new List<DbContext> {
-        
+        serviceProvider.GetRequiredService<AccountContext>()
     };
 
     foreach (var context in contexts)
@@ -65,7 +105,7 @@ void CreateDatabases(IServiceProvider serviceProvider)
 void DeleteDatabases(IServiceProvider serviceProvider)
 {
     var contexts = new List<DbContext> {
-        
+        serviceProvider.GetRequiredService<AccountContext>()
     };
 
     foreach (var context in contexts)

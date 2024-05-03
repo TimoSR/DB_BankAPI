@@ -12,6 +12,6 @@ public class Transaction : AggregateRoot, ITransaction
     {
         Time = DateTime.UtcNow;
         
-        AddDomainEvent(new TransactionCreatedEvent(requestId, Id, AccountId,Time));
+        AddDomainEvent(new TransactionCreatedEvent(requestId, Id, AccountId, Amount, Time));
     }
 }

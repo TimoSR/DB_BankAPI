@@ -1,5 +1,6 @@
 using API.Features.Domain;
 using API.Features.Infrastructure;
+using API.Features.Infrastructure.IntegrationEvents;
 using MediatR;
 
 namespace API.Features.Application.Eventhandlers;
@@ -21,10 +22,12 @@ public class TransactionCreatedHandler : INotificationHandler<TransactionCreated
     {
         _logger.LogInformation($"Transaction Created: {notification.Message}");
 
-        var integrationEvent = new
+        var integrationEvent = new TransactionCreatedIntEvent
         {
             RequestId = notification.RequestId,
-            AuctionId = notification.AccountId,
+            TransactionId = notification.TransactionId,
+            AccountId = notification.AccountId,
+            amount = notification.amount,
             CompletionTime = notification.CompletionTime
         };
         

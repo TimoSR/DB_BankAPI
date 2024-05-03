@@ -3,7 +3,7 @@ using CodeContracts.Application;
 
 namespace API.Features.Application;
 
-public class CreateAccountRequest : Request
+public class CreateAccountCommand : Command
 {
     [Required(ErrorMessage = "CPR number is required.")]
     [StringLength(10, ErrorMessage = "CPR number must be 10 characters long.")]

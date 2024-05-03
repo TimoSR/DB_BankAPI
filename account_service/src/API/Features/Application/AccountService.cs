@@ -94,17 +94,29 @@ public class AccountService : IAccountService
                 LastName = request.LastName
             };
             
-            account.CreateAccount(request.RequestId);
+            await _accountRepository.CreateAccountAsync(request.Id, account);
             
-            await _accountRepository.CreateAccountAsync(account);
-            
-            _logger.LogInformation("Request {RequestId} successfully created an account!", request.RequestId);
+            _logger.LogInformation("Request {RequestId} successfully created an account!", request.Id);
             return ServiceResult.Success($"Account {account.Id} Created Successfully!");
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex,"Request {RequestId} failed to create account", request.RequestId);
+            _logger.LogError(ex,"Request {RequestId} failed to create account", request.Id);
             return ServiceResult.Failure("Failed to create account.");
+        }
+    }
+
+    public async Task<ServiceResult> UpdateAccountBalanceAsync(UpdateBalanceRequest request)
+    {
+        try
+        {
+            await _accountRepository.UpdateBalanceAsync(request.Id, request.AccountId, request.Amount);
+            return ServiceResult.Success($"Account {request.AccountId} balance updated {request.Amount} successfully!");
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex,"Request {RequestId} failed to update account balance", request.Id);
+            return ServiceResult.Failure("Failed to update account balance.");
         }
     }
 }

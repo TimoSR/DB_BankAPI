@@ -4,7 +4,8 @@ public interface IAccountRepository
 {
     Task<List<Account>> GetAccountsAsync();
     Task<Account?> GetAccountAsync(string id);
-    Task CreateAccountAsync(Account account);  // Modified to take an Account parameter
+    Task CreateAccountAsync(Guid requestId, Account account);
+    Task UpdateBalanceAsync(Guid requestId, string id, decimal amount);
     Task<decimal> GetBalanceAsync(string id);
 }
 

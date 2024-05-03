@@ -43,16 +43,33 @@ public class AccountRepository : IAccountRepository
         return account.Balance;
     }
     
-    // Asynchronous method to create a new account
-    public async Task CreateAccountAsync(Account account)
+    public async Task CreateAccountAsync(Guid requestId, Account account)
     {
         if (account == null)
         {
             throw new ArgumentNullException(nameof(account));
         }
         
+        account.CreateAccount(requestId);
+        
         await _context.Accounts.AddAsync(account);
         await _context.SaveChangesAsync();
+        await _dispatcher.DispatchEventsAsync(account);
+    }
+    
+    public async Task UpdateBalanceAsync(Guid requestId, string id, decimal amount)
+    {
+        var account = await _context.Accounts.FindAsync(id);
+
+        if (account == null)
+        {
+            throw new InvalidOperationException("Account not found");
+        }
+
+        account.UpdateBalance(requestId, amount); // Assuming this method updates the balance within the Account entity
+        await _context.SaveChangesAsync();
+
+        // Optionally, dispatch a domain event for the balance update
         await _dispatcher.DispatchEventsAsync(account);
     }
 }

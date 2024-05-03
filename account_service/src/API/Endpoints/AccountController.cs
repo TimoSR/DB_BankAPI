@@ -34,4 +34,11 @@ public class AccountController(IAccountService service) : ControllerBase
         var result = await service.CreateAccountAsync(request);
         return Ok(result.Messages);
     }
+
+    [HttpPost("UpdateBalance")]
+    public async Task<IActionResult> UpdateBalance(UpdateBalanceRequest request)
+    {
+        var result = await service.UpdateAccountBalanceAsync(request);
+        return Ok(result.Messages);
+    }
 }

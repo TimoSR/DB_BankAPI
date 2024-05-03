@@ -6,7 +6,7 @@ using FluentAssertions;
 namespace UnitTests
 {
     [TestFixture]
-    public class AccountTests
+    public class TransactionTests
     {
         [Test]
         public void Account_Should_Initialize_With_Correct_Values()
@@ -18,7 +18,7 @@ namespace UnitTests
             var balance = 0;
 
             // Act
-            var account = new Account
+            var account = new Transaction
             {
                 CPR = cpr,
                 FirstName = firstName,

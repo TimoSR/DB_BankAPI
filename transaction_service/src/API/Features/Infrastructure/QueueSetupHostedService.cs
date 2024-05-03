@@ -12,7 +12,7 @@ public class QueueSetupHostedService : IHostedService
     public Task StartAsync(CancellationToken cancellationToken)
     {
         // Set up all necessary queues
-        _rabbitMQService.SetupQueue("accountEvents");
+        _rabbitMQService.SetupQueue("transactionEvents");
         return Task.CompletedTask;
     }
 

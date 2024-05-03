@@ -1,5 +1,4 @@
 using API.Features.Application;
-using API.Features.Application.Eventhandlers;
 using API.Features.Domain;
 using API.Features.Infrastructure;
 using API.Features.Infrastructure.Contexts;
@@ -36,11 +35,8 @@ builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<Pr
 // Domain Event Dispatcher handled by RabbitMQ
 builder.Services.AddSingleton<IDomainEventDispatcher, DomainEventDispatcher>();
 
-builder.Services.AddTransient<AccountCreatedHandler>();
-
-builder.Services.AddScoped<IAccountRepository, AccountRepository>();
-builder.Services.AddScoped<IAccountSecurityDomainService, AccountSecurityService>();
-builder.Services.AddScoped<IAccountService, AccountService>();
+builder.Services.AddScoped<ITransactionRepository, TransactionRepository>();
+builder.Services.AddScoped<ITransactionService, TransactionService>();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -58,11 +54,6 @@ builder.Services.AddCors(options =>
 });
 
 var app = builder.Build();
-
-// Settings for RabbitMQ
-var rabbitMqService = app.Services.GetRequiredService<RabbitMQService>();
-
-rabbitMqService.SetupQueue("accountEvents");
 
 // Swagger Docs, Database Setup & Delete 
 

@@ -59,11 +59,6 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
-// Settings for RabbitMQ
-var rabbitMqService = app.Services.GetRequiredService<RabbitMQService>();
-
-rabbitMqService.SetupQueue("accountEvents");
-
 // Swagger Docs, Database Setup & Delete 
 
 if (app.Environment.IsDevelopment())

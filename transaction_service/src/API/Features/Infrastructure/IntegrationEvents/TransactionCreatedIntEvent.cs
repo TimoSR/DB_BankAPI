@@ -1,6 +1,6 @@
 namespace API.Features.Infrastructure.IntegrationEvents;
 
-public class TransactionCreatedIntEvent
+public readonly record struct TransactionCreatedIntEvent(Guid RequestId, string TransactionId, string AccountId, decimal amount, DateTime CompletionTime)
 {
     
 }

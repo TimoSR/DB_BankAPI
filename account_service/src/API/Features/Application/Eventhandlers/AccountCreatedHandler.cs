@@ -29,14 +29,10 @@ public class AccountCreatedHandler : INotificationHandler<AccountCreatedEvent>
             AuctionId = notification.AccountId,
             CompletionTime = notification.CompletionTime
         };
-
+        
         var messageBody = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(integrationEvent));
         
-        _rabbitMQService.GetChannel().BasicPublish(
-            exchange: "",
-            routingKey: "accountEvents",
-            basicProperties: null,
-            body: messageBody);
+        _rabbitMQService.PublishMessage("accountEvents", messageBody);
 
         _logger.LogInformation("Published to RabbitMQ: AccountCreatedEvent");
     }

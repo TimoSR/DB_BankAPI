@@ -3,10 +3,12 @@ using API.Features.Infrastructure;
 public class RabbitMQConsumerService : BackgroundService
 {
     private readonly RabbitMQService _rabbitMQService;
+    private readonly ILogger<RabbitMQService> _logger;
 
-    public RabbitMQConsumerService(RabbitMQService rabbitMQService)
+    public RabbitMQConsumerService(RabbitMQService rabbitMQService, ILogger<RabbitMQService> logger)
     {
         _rabbitMQService = rabbitMQService;
+        _logger = logger;
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -22,7 +24,7 @@ public class RabbitMQConsumerService : BackgroundService
 
     private void ProcessMessage(string message)
     {
-        Console.WriteLine($"Processing message: {message}");
+        _logger.LogInformation("Processing message: {message}", message);
         // Add more processing logic here
     }
 }

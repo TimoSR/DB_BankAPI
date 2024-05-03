@@ -9,7 +9,7 @@ using RabbitMQ.Client;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddDbContext<AccountContext>(options => 
+builder.Services.AddDbContext<TransactionContext>(options => 
     options.UseNpgsql(builder.Configuration.GetConnectionString("AccountDbContext")));
 
 // Register RabbitMQ service
@@ -84,7 +84,7 @@ if (app.Environment.IsDevelopment())
 void CreateDatabases(IServiceProvider serviceProvider)
 {
     var contexts = new List<DbContext> {
-        serviceProvider.GetRequiredService<AccountContext>()
+        serviceProvider.GetRequiredService<TransactionContext>()
     };
 
     foreach (var context in contexts)
@@ -96,7 +96,7 @@ void CreateDatabases(IServiceProvider serviceProvider)
 void DeleteDatabases(IServiceProvider serviceProvider)
 {
     var contexts = new List<DbContext> {
-        serviceProvider.GetRequiredService<AccountContext>()
+        serviceProvider.GetRequiredService<TransactionContext>()
     };
 
     foreach (var context in contexts)

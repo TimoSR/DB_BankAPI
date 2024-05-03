@@ -24,6 +24,6 @@ public class Account : AggregateRoot, IAccount
         
         Balance += amount;
         
-        AddDomainEvent(new BalanceUpdatedEvent(requestId, Id, amount, DateTime.Now));
+        AddDomainEvent(new BalanceUpdatedEvent(requestId, Id, amount, DateTime.UtcNow));
     }
 }

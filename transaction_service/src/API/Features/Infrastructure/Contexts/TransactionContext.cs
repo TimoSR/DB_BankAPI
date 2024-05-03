@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace API.Features.Infrastructure.Contexts;
 
-public class AccountContext(DbContextOptions<AccountContext> options) : DbContext(options)
+public class TransactionContext(DbContextOptions<TransactionContext> options) : DbContext(options)
 {
     public DbSet<Transaction> Transactions { get; set; }
 

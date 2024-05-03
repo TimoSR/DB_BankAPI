@@ -10,7 +10,7 @@ public class Transaction : AggregateRoot, ITransaction
     
     public void CreateTransaction(Guid requestId)
     {
-        Time = DateTime.Now;
+        Time = DateTime.UtcNow;
         
         AddDomainEvent(new TransactionCreatedEvent(requestId, Id, Time));
     }

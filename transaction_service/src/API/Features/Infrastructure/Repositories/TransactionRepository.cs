@@ -7,11 +7,11 @@ namespace API.Features.Infrastructure.Repositories;
 
 public class TransactionRepository : ITransactionRepository
 {
-    private readonly AccountContext _context;
+    private readonly TransactionContext _context;
     private IDomainEventDispatcher _dispatcher;
 
     public TransactionRepository(
-        AccountContext context,
+        TransactionContext context,
         IDomainEventDispatcher dispatcher)
     {
         _context = context;

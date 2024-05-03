@@ -5,7 +5,7 @@ namespace API.Features.Application;
 
 public interface ITransactionService
 {
-    Task<ServiceResult<List<Transaction>>> GetAllTransactionsAsync();
-    Task<ServiceResult<Transaction>> GetTransactionByIdAsync(string id);
+    Task<ServiceResult<List<TransactionDTO>>> GetAllTransactionsAsync();
+    Task<ServiceResult<TransactionDTO>> GetTransactionByIdAsync(string id);
     Task<ServiceResult> CreateTransactionAsync(CreateTransactionCommand command);
 }

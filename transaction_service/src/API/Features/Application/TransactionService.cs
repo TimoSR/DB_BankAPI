@@ -16,32 +16,52 @@ public class TransactionService : ITransactionService
         _logger = logger;
     }
     
-    public async Task<ServiceResult<List<Transaction>>> GetAllTransactionsAsync()
+    public async Task<ServiceResult<List<TransactionDTO>>> GetAllTransactionsAsync()
     {
         try
         {
             var transactions = await _transactionRepository.GetTransactionsAsync();
-            return ServiceResult<List<Transaction>>.Success(transactions);
+            var transactionDTOs = new List<TransactionDTO>();
+            foreach (var transaction in transactions)
+            {
+                transactionDTOs.Add(new TransactionDTO()
+                {
+                    Id = transaction.Id,
+                    AccountId = transaction.AccountId,
+                    Amount = transaction.Amount,
+                    Time = transaction.Time
+                });
+            }
+            
+            return ServiceResult<List<TransactionDTO>>.Success(transactionDTOs);
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Failed to get accounts.");
-            return ServiceResult<List<Transaction>>.Failure("Failed to get accounts.");
+            return ServiceResult<List<TransactionDTO>>.Failure("Failed to get accounts.");
         }
     }
 
-    public async Task<ServiceResult<Transaction>> GetTransactionByIdAsync(string id)
+    public async Task<ServiceResult<TransactionDTO>> GetTransactionByIdAsync(string id)
     {
         try
         {
-            var account = await _transactionRepository.GetTransactionAsync(id);
+            var transaction = await _transactionRepository.GetTransactionAsync(id);
+
+            var transactionDTO = new TransactionDTO()
+            {
+                Id = transaction.Id,
+                AccountId = transaction.AccountId,
+                Amount = transaction.Amount,
+                Time = transaction.Time
+            };
         
-            return ServiceResult<Transaction>.Success(account);
+            return ServiceResult<TransactionDTO>.Success(transactionDTO);
         }
         catch (Exception ex)
         {
             _logger.LogError(ex,"Failed to get account with ID {id}", id);
-            return ServiceResult<Transaction>.Failure($"Failed to get account with {id}");
+            return ServiceResult<TransactionDTO>.Failure($"Failed to get account with {id}");
         }
     }
     

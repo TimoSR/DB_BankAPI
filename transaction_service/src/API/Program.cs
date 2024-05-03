@@ -1,4 +1,5 @@
 using API.Features.Application;
+using API.Features.Application.Eventhandlers;
 using API.Features.Domain;
 using API.Features.Infrastructure;
 using API.Features.Infrastructure.Contexts;
@@ -34,6 +35,7 @@ builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<Pr
 
 // Domain Event Dispatcher handled by RabbitMQ
 builder.Services.AddSingleton<IDomainEventDispatcher, DomainEventDispatcher>();
+builder.Services.AddTransient<TransactionCreatedHandler>();
 
 builder.Services.AddScoped<ITransactionRepository, TransactionRepository>();
 builder.Services.AddScoped<ITransactionService, TransactionService>();

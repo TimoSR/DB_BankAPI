@@ -83,39 +83,39 @@ public class AccountService : IAccountService
         }
     }
     
-    public async Task<ServiceResult> CreateAccountAsync(CreateAccountRequest request)
+    public async Task<ServiceResult> CreateAccountAsync(CreateAccountCommand command)
     {
         try
         {
             var account = new Account()
             {
-                CPR = _security.Hash(request.CPR),
-                FirstName = request.FirstName,
-                LastName = request.LastName
+                CPR = _security.Hash(command.CPR),
+                FirstName = command.FirstName,
+                LastName = command.LastName
             };
             
-            await _accountRepository.CreateAccountAsync(request.Id, account);
+            await _accountRepository.CreateAccountAsync(command.Id, account);
             
-            _logger.LogInformation("Request {RequestId} successfully created an account!", request.Id);
+            _logger.LogInformation("Request {RequestId} successfully created an account!", command.Id);
             return ServiceResult.Success($"Account {account.Id} Created Successfully!");
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex,"Request {RequestId} failed to create account", request.Id);
+            _logger.LogError(ex,"Request {RequestId} failed to create account", command.Id);
             return ServiceResult.Failure("Failed to create account.");
         }
     }
 
-    public async Task<ServiceResult> UpdateAccountBalanceAsync(UpdateBalanceRequest request)
+    public async Task<ServiceResult> UpdateAccountBalanceAsync(UpdateBalanceCommand command)
     {
         try
         {
-            await _accountRepository.UpdateBalanceAsync(request.Id, request.AccountId, request.Amount);
-            return ServiceResult.Success($"Account {request.AccountId} balance updated {request.Amount} successfully!");
+            await _accountRepository.UpdateBalanceAsync(command.Id, command.AccountId, command.Amount);
+            return ServiceResult.Success($"Account {command.AccountId} balance updated {command.Amount} successfully!");
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex,"Request {RequestId} failed to update account balance", request.Id);
+            _logger.LogError(ex,"Request {RequestId} failed to update account balance", command.Id);
             return ServiceResult.Failure("Failed to update account balance.");
         }
     }

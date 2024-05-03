@@ -1,35 +1,28 @@
 using API.Features.Domain;
 using FluentAssertions;
 
-// Ensure this is correctly using your namespace
-
 namespace UnitTests
 {
     [TestFixture]
     public class TransactionTests
     {
         [Test]
-        public void Account_Should_Initialize_With_Correct_Values()
+        public void CreateTransaction_WhenCalled_SetsTimeAndRaisesTransactionCreatedEvent()
         {
             // Arrange
-            var cpr = "123456-7890";
-            var firstName = "John";
-            var lastName = "Doe";
-            var balance = 0;
+            var transaction = new Transaction
+            {
+                AccountId = "123",
+                Amount = 100m
+            };
+            var requestId = Guid.NewGuid();
 
             // Act
-            var account = new Transaction
-            {
-                CPR = cpr,
-                FirstName = firstName,
-                LastName = lastName,
-            };
+            transaction.CreateTransaction(requestId);
 
             // Assert
-            account.CPR.Should().Be(cpr, because: "CPR should be set correctly during initialization.");
-            account.FirstName.Should().Be(firstName, because: "FirstName should be set correctly during initialization.");
-            account.LastName.Should().Be(lastName, because: "LastName should be set correctly during initialization.");
-            account.Balance.Should().Be(balance, because: "Balance should be set correctly and be immutable after initialization.");
+            transaction.Time.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(1));
+            transaction.DomainEvents.Should().ContainSingle();
         }
     }
 }

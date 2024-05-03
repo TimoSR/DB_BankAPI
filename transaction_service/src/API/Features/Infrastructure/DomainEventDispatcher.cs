@@ -2,7 +2,7 @@ using CodeContracts.DDD;
 using CodeContracts.Infrastructure;
 using MediatR;
 
-namespace Infrastructure.Persistence;
+namespace API.Features.Infrastructure;
 
 public class DomainEventDispatcher(IPublisher mediator) : IDomainEventDispatcher
 {

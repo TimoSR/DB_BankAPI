@@ -3,7 +3,7 @@ using CodeContracts.Application;
 
 namespace API.Features.Application;
 
-public class UpdateBalanceRequest : Request
+public class UpdateBalanceCommand : Command
 {
     [Required(ErrorMessage = "Account ID is required.")]
     public string AccountId { get; set; }

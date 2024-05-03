@@ -29,16 +29,17 @@ public class AccountController(IAccountService service) : ControllerBase
     }
 
     [HttpPost("CreateAccount")]
-    public async Task<IActionResult> CreateAccount(CreateAccountRequest request)
+    public async Task<IActionResult> CreateAccount(CreateAccountCommand command)
     {
-        var result = await service.CreateAccountAsync(request);
+        var result = await service.CreateAccountAsync(command);
         return Ok(result.Messages);
     }
-
-    [HttpPost("UpdateBalance")]
+    
+    // Test Endpoint
+    /*[HttpPut("UpdateBalance")]
     public async Task<IActionResult> UpdateBalance(UpdateBalanceRequest request)
     {
         var result = await service.UpdateAccountBalanceAsync(request);
         return Ok(result.Messages);
-    }
+    }*/
 }

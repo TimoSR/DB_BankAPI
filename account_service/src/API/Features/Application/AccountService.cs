@@ -94,7 +94,7 @@ public class AccountService : IAccountService
                 LastName = request.LastName
             };
             
-            account.Initialize();
+            account.CreateAccount(request.RequestId);
             
             await _accountRepository.CreateAccountAsync(account);
             

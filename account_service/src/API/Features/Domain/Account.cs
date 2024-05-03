@@ -9,11 +9,11 @@ public class Account : AggregateRoot, IAccount
     public string LastName { get; set; }
     public decimal Balance { get; init; }
     
-    public void Initialize()
+    public void CreateAccount(Guid requestId)
     {
         if (string.IsNullOrEmpty(CPR) || string.IsNullOrEmpty(FirstName) || string.IsNullOrEmpty(LastName))
             throw new InvalidOperationException("Cannot initialize account because one or more required properties are not set.");
         
-        AddDomainEvent(new AccountCreatedEvent(Id, DateTime.Now));
+        AddDomainEvent(new AccountCreatedEvent(requestId, Id, DateTime.Now));
     }
 }

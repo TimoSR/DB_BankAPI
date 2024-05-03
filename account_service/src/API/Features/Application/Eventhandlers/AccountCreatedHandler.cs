@@ -26,6 +26,7 @@ public class AccountCreatedHandler : INotificationHandler<AccountCreatedEvent>
 
         var integrationEvent = new
         {
+            RequestId = notification.RequestId,
             AuctionId = notification.AccountId,
             CompletionTime = notification.CompletionTime
         };

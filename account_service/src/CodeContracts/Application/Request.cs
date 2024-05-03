@@ -1,6 +1,9 @@
+using System.Text.Json.Serialization;
+
 namespace CodeContracts.Application;
 
 public class Request : IRequest
 {
-    public Guid RequestId { get; init; } = Guid.NewGuid();
+    [JsonIgnore]
+    public Guid Id { get; init; } = Guid.NewGuid();
 }

@@ -30,9 +30,7 @@ public class AccountCreatedHandler : INotificationHandler<AccountCreatedEvent>
             CompletionTime = notification.CompletionTime
         };
         
-        var messageBody = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(integrationEvent));
-        
-        _rabbitMQService.PublishMessage("accountEvents", messageBody);
+        _rabbitMQService.PublishMessage("accountEvents", integrationEvent);
 
         _logger.LogInformation("Published to RabbitMQ: AccountCreatedEvent");
     }

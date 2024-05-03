@@ -14,9 +14,10 @@ namespace UnitTests
             var transactionId = Guid.NewGuid().ToString();
             var accountId = "1234567890";
             var completionTime = DateTime.UtcNow;
+            var amount = 100;
 
             // Create the event
-            var eventInstance = new TransactionCreatedEvent(requestId, transactionId, accountId, completionTime);
+            var eventInstance = new TransactionCreatedEvent(requestId, transactionId, accountId, amount, completionTime);
 
             // Assert
             eventInstance.RequestId.Should().Be(requestId);

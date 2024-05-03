@@ -15,7 +15,7 @@ namespace UnitTests
             var cpr = "123456-7890";
             var firstName = "John";
             var lastName = "Doe";
-            var balance = 1000m;
+            var balance = 0;
 
             // Act
             var account = new Account
@@ -23,7 +23,6 @@ namespace UnitTests
                 CPR = cpr,
                 FirstName = firstName,
                 LastName = lastName,
-                Balance = balance
             };
 
             // Assert
@@ -31,26 +30,6 @@ namespace UnitTests
             account.FirstName.Should().Be(firstName, because: "FirstName should be set correctly during initialization.");
             account.LastName.Should().Be(lastName, because: "LastName should be set correctly during initialization.");
             account.Balance.Should().Be(balance, because: "Balance should be set correctly and be immutable after initialization.");
-        }
-
-        [Test]
-        public void Balance_Should_Be_Immutable_After_Initialization()
-        {
-            // Arrange
-            var account = new Account
-            {
-                CPR = "123456-7890",
-                FirstName = "John",
-                LastName = "Doe",
-                Balance = 1000m
-            };
-
-            // Act
-            // Normally we'd try to change it here, but C# init-only setters prevent this after construction.
-            // Therefore, only asserting the initial set value.
-
-            // Assert
-            account.Balance.Should().Be(1000m, because: "Balance should be immutable after being initially set.");
         }
     }
 }

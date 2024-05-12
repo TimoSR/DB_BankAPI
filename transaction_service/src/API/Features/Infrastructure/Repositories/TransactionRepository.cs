@@ -5,44 +5,24 @@ using Microsoft.EntityFrameworkCore;
 
 namespace API.Features.Infrastructure.Repositories;
 
-public class TransactionRepository : ITransactionRepository
+public class TransactionRepository(TransactionContext context) : ITransactionRepository
 {
-    private readonly TransactionContext _context;
-    private IDomainEventDispatcher _dispatcher;
-
-    public TransactionRepository(
-        TransactionContext context,
-        IDomainEventDispatcher dispatcher)
-    {
-        _context = context;
-        _dispatcher = dispatcher;
-    }
-
     // Asynchronous method to retrieve all accounts
     public async Task<List<Transaction>> GetTransactionsAsync()
     {
-        return await _context.Transactions.ToListAsync();
+        return await context.Transactions.ToListAsync();
     }
 
     // Asynchronous method to retrieve a single account by ID
     public async Task<Transaction?> GetTransactionAsync(string id)
     {
-        var result = await _context.Transactions.FindAsync(id);
-
+        var result = await context.Transactions.FindAsync(id);
         return result;
     }
     
-    public async Task CreateTransactionAsync(Guid requestId, Transaction transaction)
+    public async Task AddTransactionAsync(Guid requestId, Transaction transaction)
     {
-        if (transaction == null)
-        {
-            throw new ArgumentNullException(nameof(transaction));
-        }
-        
-        transaction.CreateTransaction(requestId);
-        
-        await _context.Transactions.AddAsync(transaction);
-        await _context.SaveChangesAsync();
-        await _dispatcher.DispatchEventsAsync(transaction);
+        await context.Transactions.AddAsync(transaction);
+        await context.SaveChangesAsync();
     }
 }

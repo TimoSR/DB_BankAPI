@@ -8,6 +8,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="MassTransit.RabbitMQ" Version="8.2.2" />
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.3" />
         <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.4" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.4">
@@ -21,6 +22,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\CodeContracts\CodeContracts.csproj" />
+      <ProjectReference Include="..\MsgContracts\MsgContracts.csproj" />
     </ItemGroup>
 
 </Project>

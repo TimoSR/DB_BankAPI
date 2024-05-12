@@ -4,8 +4,8 @@ using CodeContracts.Application;
 
 namespace API.Features.Application;
 
-public class CreateTransactionCommand : Command
+public record CreateTransactionCommand : Command
 {
-    public string AccountId { get; set; }
-    public decimal Amount { get; set; }
+    public required string AccountId { get; set; }
+    public required decimal Amount { get; set; }
 }

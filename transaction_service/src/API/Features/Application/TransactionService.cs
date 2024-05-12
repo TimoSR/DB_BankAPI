@@ -1,27 +1,36 @@
 using API.Features.Domain;
 using CodeContracts.Application.ServiceResultPattern;
+using CodeContracts.Infrastructure;
 
 namespace API.Features.Application;
 
 public class TransactionService : ITransactionService
 {
-    private readonly ITransactionRepository _transactionRepository;
-    private readonly ILogger<TransactionService> _logger; 
+    private readonly ILogger<TransactionService> _logger;
+    private readonly ITransactionRepository _repository;
+    private readonly ITransactionFactory _factory;
+    private readonly IDomainEventDispatcher _dispatcher;
 
     public TransactionService( 
-        ITransactionRepository transactionRepository,
-        ILogger<TransactionService> logger)
+        ITransactionRepository repository,
+        ITransactionFactory factory,
+        ILogger<TransactionService> logger,
+        IDomainEventDispatcher dispatcher)
     {
-        _transactionRepository = transactionRepository;
+        _repository = repository;
+        _factory = factory;
         _logger = logger;
+        _dispatcher = dispatcher;
     }
     
     public async Task<ServiceResult<List<TransactionDTO>>> GetAllTransactionsAsync()
     {
         try
         {
-            var transactions = await _transactionRepository.GetTransactionsAsync();
+            var transactions = await _repository.GetTransactionsAsync();
+            
             var transactionDTOs = new List<TransactionDTO>();
+            
             foreach (var transaction in transactions)
             {
                 transactionDTOs.Add(new TransactionDTO()
@@ -46,7 +55,7 @@ public class TransactionService : ITransactionService
     {
         try
         {
-            var transaction = await _transactionRepository.GetTransactionAsync(id);
+            var transaction = await _repository.GetTransactionAsync(id);
 
             var transactionDTO = new TransactionDTO()
             {
@@ -69,21 +78,19 @@ public class TransactionService : ITransactionService
     {
         try
         {
-            var account = new Transaction()
-            {
-                AccountId = command.AccountId,
-                Amount = command.Amount
-            };
+            var transaction = _factory.CreateTransaction(command.Id, command.AccountId, command.Amount);
             
-            await _transactionRepository.CreateTransactionAsync(command.Id, account);
+            await _repository.AddTransactionAsync(command.Id, transaction);
+            
+            await _dispatcher.DispatchEventsAsync(transaction);
             
             _logger.LogInformation("Command {CommandId} successfully created an transaction!", command.Id);
-            return ServiceResult.Success($"Account {account.Id} Created Successfully!");
+            return ServiceResult.Success($"Transaction {transaction.Id} Created Successfully!");
         }
         catch (Exception ex)
         {
             _logger.LogError(ex,"Command {CommandId} failed to create transaction", command.Id);
-            return ServiceResult.Failure("Failed to create account.");
+            return ServiceResult.Failure("Failed to create transaction.");
         }
     }
 }

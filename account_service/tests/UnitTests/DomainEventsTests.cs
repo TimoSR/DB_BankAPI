@@ -18,7 +18,7 @@ namespace UnitTests
             var eventInstance = new AccountCreatedEvent(requestId, accountId, completionTime);
 
             // Assert
-            eventInstance.RequestId.Should().Be(requestId);
+            eventInstance.CommandId.Should().Be(requestId);
             eventInstance.AccountId.Should().Be(accountId);
             eventInstance.CompletionTime.Should().Be(completionTime);
             eventInstance.Message.Should().Be($"Request {requestId} Created Account {accountId} at {completionTime:yyyy-MM-dd HH:mm:ss} (UTC).");
@@ -37,7 +37,7 @@ namespace UnitTests
             var eventInstance = new BalanceUpdatedEvent(requestId, accountId, amount, completionTime);
 
             // Assert
-            eventInstance.RequestId.Should().Be(requestId);
+            eventInstance.CommandId.Should().Be(requestId);
             eventInstance.AccountId.Should().Be(accountId);
             eventInstance.Amount.Should().Be(amount);
             eventInstance.CompletionTime.Should().Be(completionTime);

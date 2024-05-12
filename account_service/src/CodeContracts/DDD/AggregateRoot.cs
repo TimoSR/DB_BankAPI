@@ -6,7 +6,7 @@ namespace CodeContracts.DDD;
 public abstract class AggregateRoot : IAggregateRoot
 {
     // Auto generates the guid as default, but custom ID can be set
-    public string Id { get; } = Guid.NewGuid().ToString();
+    public string ID { get; set; }
 
     [NotMapped] public List<INotification>? DomainEvents { get; private set; }
 
@@ -15,12 +15,12 @@ public abstract class AggregateRoot : IAggregateRoot
     public virtual void MarkAsDeleted<T>() where T : IEntity
     {
         IsDeleted = true;
-        AddDomainEvent(new EntitySoftDeletedEvent<T>(Id));
+        AddDomainEvent(new EntitySoftDeletedEvent<T>(ID));
     }
 
     public void TriggerDeleteNotification<T>() where T : IEntity
     {
-        AddDomainEvent(new EntityDeletedEvent<T>(Id));
+        AddDomainEvent(new EntityDeletedEvent<T>(ID));
     }
 
     public void AddDomainEvent(INotification eventItem)

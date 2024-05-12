@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace API.Features.Infrastructure.Repositories;
 
-public class TransactionRepository(TransactionContext context) : ITransactionRepository
+public class TransactionRepository(TransactionContext context, IDomainEventDispatcher dispatcher) : ITransactionRepository
 {
     // Asynchronous method to retrieve all accounts
     public async Task<List<Transaction>> GetTransactionsAsync()
@@ -24,5 +24,6 @@ public class TransactionRepository(TransactionContext context) : ITransactionRep
     {
         await context.Transactions.AddAsync(transaction);
         await context.SaveChangesAsync();
+        await dispatcher.DispatchEventsAsync(transaction);
     }
 }

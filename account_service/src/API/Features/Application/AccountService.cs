@@ -1,5 +1,6 @@
 using API.Features.Domain;
 using CodeContracts.Application.ServiceResultPattern;
+using CodeContracts.Infrastructure;
 
 namespace API.Features.Application;
 
@@ -7,14 +8,17 @@ public class AccountService : IAccountService
 {
     private readonly IAccountRepository _accountRepository;
     private readonly IAccountSecurityDomainService _security;
-    private readonly ILogger<AccountService> _logger; 
+    private readonly ILogger<AccountService> _logger;
+    private readonly IAccountFactory _factory;
 
     public AccountService( 
         IAccountRepository accountRepository,
+        IAccountFactory factory,
         IAccountSecurityDomainService security,
         ILogger<AccountService> logger)
     {
         _accountRepository = accountRepository;
+        _factory = factory;
         _security = security;
         _logger = logger;
     }
@@ -30,7 +34,7 @@ public class AccountService : IAccountService
             {
                 accountDTOs.Add(new AccountDTO()
                 {
-                    Id = account.Id,
+                    Id = account.ID,
                     FirstName = account.FirstName,
                     LastName = account.LastName,
                     Balance = account.Balance
@@ -53,7 +57,7 @@ public class AccountService : IAccountService
         
             var accountDTO = new AccountDTO()
             {
-                Id = account.Id,
+                Id = account.ID,
                 FirstName = account.FirstName,
                 LastName = account.LastName,
                 Balance = account.Balance
@@ -87,17 +91,14 @@ public class AccountService : IAccountService
     {
         try
         {
-            var account = new Account()
-            {
-                CPR = _security.Hash(command.CPR),
-                FirstName = command.FirstName,
-                LastName = command.LastName
-            };
+            var hashedCPR = _security.Hash(command.CPR);
+            
+            var account = _factory.CreateAccount(command.Id, hashedCPR, command.FirstName, command.LastName);
             
             await _accountRepository.CreateAccountAsync(command.Id, account);
             
             _logger.LogInformation("Request {RequestId} successfully created an account!", command.Id);
-            return ServiceResult.Success($"Account {account.Id} Created Successfully!");
+            return ServiceResult.Success($"Account {account.ID} Created Successfully!");
         }
         catch (Exception ex)
         {

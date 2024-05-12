@@ -14,7 +14,7 @@ public class RabbitMQConsumerService : BackgroundService
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         _rabbitMQService.StartConsuming("accountEvents", ProcessMessage);
-        _rabbitMQService.StartConsuming("transactionEvents", ProcessMessage);
+        //_rabbitMQService.StartConsuming("transactionEvents", ProcessMessage);
         
         // Keep the task alive as long as the service is not stopped.
         while (!stoppingToken.IsCancellationRequested)

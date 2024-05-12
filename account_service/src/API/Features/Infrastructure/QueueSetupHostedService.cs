@@ -13,6 +13,7 @@ public class QueueSetupHostedService : IHostedService
     {
         // Set up all necessary queues
         _rabbitMQService.SetupQueue("accountEvents");
+        _rabbitMQService.SetupQueue("transactionsEvents");
         return Task.CompletedTask;
     }
 

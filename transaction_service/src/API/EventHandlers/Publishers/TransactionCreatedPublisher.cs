@@ -3,7 +3,7 @@ using API.Features.Infrastructure;
 using MediatR;
 using MsgContracts;
 
-namespace API.EventHandlers;
+namespace API.EventHandlers.Publishers;
 
 public class TransactionCreatedPublisher : INotificationHandler<TransactionCreatedEvent>
 {

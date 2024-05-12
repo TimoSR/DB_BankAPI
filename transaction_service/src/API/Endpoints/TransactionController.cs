@@ -1,5 +1,4 @@
 using API.Features.Application;
-using API.Features.Domain;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Endpoints;

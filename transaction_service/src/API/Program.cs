@@ -29,6 +29,7 @@ builder.Services.AddSingleton<RabbitMQService>(serviceProvider => {
     return new RabbitMQService(factory, logger);
 });
 
+builder.Services.AddHostedService<QueueSetupHostedService>();
 builder.Services.AddHostedService<TransactionMessageConsumer>();
 
 // Adding Mediator

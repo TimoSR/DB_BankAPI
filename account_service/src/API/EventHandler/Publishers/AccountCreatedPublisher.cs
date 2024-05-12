@@ -1,19 +1,16 @@
-using System.Text;
-using System.Text.Json;
 using API.Features.Domain;
 using API.Features.Infrastructure;
 using MediatR;
-using RabbitMQ.Client;
 
-namespace API.Features.Application.Eventhandlers;
+namespace API.EventHandler.Publishers;
 
-public class AccountCreatedHandler : INotificationHandler<AccountCreatedEvent>
+public class AccountCreatedPublisher : INotificationHandler<AccountCreatedEvent>
 {
-    private readonly ILogger<AccountCreatedHandler> _logger;
+    private readonly ILogger<AccountCreatedPublisher> _logger;
     private readonly RabbitMQService _rabbitMQService;
 
-    public AccountCreatedHandler(
-        ILogger<AccountCreatedHandler> logger, 
+    public AccountCreatedPublisher(
+        ILogger<AccountCreatedPublisher> logger, 
         RabbitMQService rabbitMQService)
     {
         _logger = logger;

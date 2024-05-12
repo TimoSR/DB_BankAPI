@@ -3,7 +3,7 @@ using API.Features.Application;
 using API.Features.Infrastructure;
 using MsgContracts;
 
-namespace API.EventHandlers.Consumers;
+namespace API.EventHandler.Consumers;
 
 public class TransactionMessageConsumer : BackgroundService
 {
@@ -35,18 +35,18 @@ public class TransactionMessageConsumer : BackgroundService
 
         using var scope = _services.CreateScope();
         
-        var transactionService = scope.ServiceProvider.GetRequiredService<ITransactionService>();
+        var transactionService = scope.ServiceProvider.GetRequiredService<IAccountService>();
             
         var @event = JsonSerializer.Deserialize<TransactionCreatedIntEvent>(message);
 
-        var command = new CreateTransactionCommand
+        var command = new UpdateBalanceCommand
         {
             Id = @event.CommandId,
             AccountId = @event.AccountId,
             Amount = @event.Amount
         };
 
-        var result = await transactionService.CreateTransactionAsync(command);
+        var result = await transactionService.UpdateAccountBalanceAsync(command);
         
         if (result.IsSuccess)
         {

@@ -24,7 +24,7 @@ public class TransactionCreatedPublisher : INotificationHandler<TransactionCreat
 
         var integrationEvent = new TransactionCreatedIntEvent
         {
-            RequestId = notification.CommandId,
+            CommandId = notification.CommandId,
             TransactionId = notification.TransactionId,
             AccountId = notification.AccountId,
             Amount = notification.amount,

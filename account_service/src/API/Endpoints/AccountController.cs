@@ -34,12 +34,4 @@ public class AccountController(IAccountService service) : ControllerBase
         var result = await service.CreateAccountAsync(command);
         return Ok(result.Messages);
     }
-    
-    // Test Endpoint
-    /*[HttpPut("UpdateBalance")]
-    public async Task<IActionResult> UpdateBalance(UpdateBalanceRequest request)
-    {
-        var result = await service.UpdateAccountBalanceAsync(request);
-        return Ok(result.Messages);
-    }*/
 }

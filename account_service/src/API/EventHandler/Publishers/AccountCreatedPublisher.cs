@@ -23,7 +23,7 @@ public class AccountCreatedPublisher : INotificationHandler<AccountCreatedEvent>
 
         var integrationEvent = new
         {
-            RequestId = notification.RequestId,
+            RequestId = notification.CommandId,
             AuctionId = notification.AccountId,
             CompletionTime = notification.CompletionTime
         };

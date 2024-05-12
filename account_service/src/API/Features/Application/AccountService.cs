@@ -1,6 +1,5 @@
 using API.Features.Domain;
 using CodeContracts.Application.ServiceResultPattern;
-using CodeContracts.Infrastructure;
 
 namespace API.Features.Application;
 

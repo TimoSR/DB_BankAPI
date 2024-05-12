@@ -1,11 +1,14 @@
 using System.ComponentModel.DataAnnotations;
-using API.Features.Domain;
 using CodeContracts.Application;
 
 namespace API.Features.Application;
 
-public class CreateTransactionCommand : Command
+public record CreateTransactionCommand : Command
 {
-    public string AccountId { get; set; }
-    public decimal Amount { get; set; }
+    [Required(ErrorMessage = "Account ID is required.")]
+    public required string AccountId { get; set; }
+    
+    [Required(ErrorMessage = "Amount is required.")]
+    [NonZeroDecimal]
+    public required decimal Amount { get; set; }
 }

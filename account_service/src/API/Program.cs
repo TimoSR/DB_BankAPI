@@ -1,5 +1,6 @@
+using API.EventHandler.Consumers;
+using API.EventHandler.Publishers;
 using API.Features.Application;
-using API.Features.Application.Eventhandlers;
 using API.Features.Domain;
 using API.Features.Infrastructure;
 using API.Features.Infrastructure.Contexts;
@@ -29,6 +30,7 @@ builder.Services.AddSingleton<RabbitMQService>(serviceProvider => {
 
 builder.Services.AddHostedService<QueueSetupHostedService>();
 builder.Services.AddHostedService<RabbitMQConsumerService>();
+builder.Services.AddHostedService<TransactionMessageConsumer>();
 
 // Adding Mediator
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<Program>());
@@ -36,7 +38,7 @@ builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<Pr
 // Domain Event Dispatcher handled by RabbitMQ
 builder.Services.AddSingleton<IDomainEventDispatcher, DomainEventDispatcher>();
 
-builder.Services.AddTransient<AccountCreatedHandler>();
+builder.Services.AddTransient<AccountCreatedPublisher>();
 
 builder.Services.AddScoped<IAccountRepository, AccountRepository>();
 builder.Services.AddScoped<IAccountSecurityDomainService, AccountSecurityService>();

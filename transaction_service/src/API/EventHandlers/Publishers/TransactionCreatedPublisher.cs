@@ -1,17 +1,17 @@
 using API.Features.Domain;
 using API.Features.Infrastructure;
-using API.Features.Infrastructure.IntegrationEvents;
 using MediatR;
+using MsgContracts;
 
-namespace API.Features.Application.Eventhandlers;
+namespace API.EventHandlers.Publishers;
 
-public class TransactionCreatedHandler : INotificationHandler<TransactionCreatedEvent>
+public class TransactionCreatedPublisher : INotificationHandler<TransactionCreatedEvent>
 {
-    private readonly ILogger<TransactionCreatedHandler> _logger;
+    private readonly ILogger<TransactionCreatedPublisher> _logger;
     private readonly RabbitMQService _rabbitMQService;
 
-    public TransactionCreatedHandler(
-        ILogger<TransactionCreatedHandler> logger, 
+    public TransactionCreatedPublisher(
+        ILogger<TransactionCreatedPublisher> logger, 
         RabbitMQService rabbitMQService)
     {
         _logger = logger;
@@ -24,10 +24,10 @@ public class TransactionCreatedHandler : INotificationHandler<TransactionCreated
 
         var integrationEvent = new TransactionCreatedIntEvent
         {
-            RequestId = notification.RequestId,
+            CommandId = notification.CommandId,
             TransactionId = notification.TransactionId,
             AccountId = notification.AccountId,
-            amount = notification.amount,
+            Amount = notification.amount,
             CompletionTime = notification.CompletionTime
         };
         

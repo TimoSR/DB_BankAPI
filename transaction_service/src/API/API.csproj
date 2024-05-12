@@ -25,4 +25,8 @@
       <ProjectReference Include="..\MsgContracts\MsgContracts.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="EventHandlers\Consumers\" />
+    </ItemGroup>
+
 </Project>

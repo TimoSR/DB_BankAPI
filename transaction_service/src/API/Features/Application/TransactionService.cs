@@ -9,7 +9,6 @@ public class TransactionService : ITransactionService
     private readonly ILogger<TransactionService> _logger;
     private readonly ITransactionRepository _repository;
     private readonly ITransactionFactory _factory;
-    private readonly IDomainEventDispatcher _dispatcher;
 
     public TransactionService( 
         ITransactionRepository repository,
@@ -20,7 +19,6 @@ public class TransactionService : ITransactionService
         _repository = repository;
         _factory = factory;
         _logger = logger;
-        _dispatcher = dispatcher;
     }
     
     public async Task<ServiceResult<List<TransactionDTO>>> GetAllTransactionsAsync()
@@ -81,8 +79,6 @@ public class TransactionService : ITransactionService
             var transaction = _factory.CreateTransaction(command.Id, command.AccountId, command.Amount);
             
             await _repository.AddTransactionAsync(command.Id, transaction);
-            
-            await _dispatcher.DispatchEventsAsync(transaction);
             
             _logger.LogInformation("Command {CommandId} successfully created an transaction!", command.Id);
             return ServiceResult.Success($"Transaction {transaction.Id} Created Successfully!");

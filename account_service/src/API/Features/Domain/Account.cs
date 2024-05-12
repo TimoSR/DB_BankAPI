@@ -9,21 +9,22 @@ public class Account : AggregateRoot, IAccount
     public string LastName { get; set; }
     public decimal Balance { get; private set; }
     
-    public void CreateAccount(Guid requestId)
+    public void InitializeAccount(Guid commandId)
     {
-        if (string.IsNullOrEmpty(CPR) || string.IsNullOrEmpty(FirstName) || string.IsNullOrEmpty(LastName))
+        
+        if (string.IsNullOrEmpty(ID) || string.IsNullOrEmpty(CPR) || string.IsNullOrEmpty(FirstName) || string.IsNullOrEmpty(LastName))
             throw new InvalidOperationException("Cannot create account because one or more required properties are not set.");
         
-        AddDomainEvent(new AccountCreatedEvent(requestId, Id, DateTime.Now));
+        AddDomainEvent(new AccountCreatedEvent(commandId, ID, DateTime.Now));
     }
 
-    public void UpdateBalance(Guid requestId, decimal amount)
+    public void UpdateBalance(Guid commandId, decimal amount)
     {
         if (amount.Equals(0))
             throw new InvalidOperationException("Cannot update account balance as the value 0 is not a valid input.");
         
         Balance += amount;
         
-        AddDomainEvent(new BalanceUpdatedEvent(requestId, Id, amount, DateTime.UtcNow));
+        AddDomainEvent(new BalanceUpdatedEvent(commandId, ID, amount, DateTime.UtcNow));
     }
 }

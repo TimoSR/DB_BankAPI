@@ -28,7 +28,7 @@ namespace UnitTests
             _account.LastName = "Doe";
 
             // Act
-            Action act = () => _account.CreateAccount(_requestId);
+            Action act = () => _account.InitializeAccount(_requestId);
 
             // Assert
             act.Should().NotThrow<InvalidOperationException>();
@@ -43,7 +43,7 @@ namespace UnitTests
             _account.FirstName = null;  // Missing first name
 
             // Act
-            Action act = () => _account.CreateAccount(_requestId);
+            Action act = () => _account.InitializeAccount(_requestId);
 
             // Assert
             act.Should().Throw<InvalidOperationException>().WithMessage("Cannot create account because one or more required properties are not set.");

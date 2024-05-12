@@ -8,7 +8,7 @@ public class TransactionFactory : ITransactionFactory
 
         var transaction = new Transaction(id, accountId, amount);
 
-        transaction.InitTransaction(commandId);
+        transaction.InitializeTransaction(commandId);
 
         return transaction;
     }

@@ -43,6 +43,7 @@ builder.Services.AddTransient<AccountCreatedPublisher>();
 builder.Services.AddScoped<IAccountRepository, AccountRepository>();
 builder.Services.AddScoped<IAccountSecurityDomainService, AccountSecurityService>();
 builder.Services.AddScoped<IAccountService, AccountService>();
+builder.Services.AddScoped<IAccountFactory, AccountFactory>();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();

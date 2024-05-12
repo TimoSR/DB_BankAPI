@@ -17,11 +17,11 @@ public class AccountContext(DbContextOptions<AccountContext> options) : DbContex
         modelBuilder.Entity<Account>(entity =>
         {
             entity.ToTable("Accounts");
-            entity.HasKey(a => a.Id);
+            entity.HasKey(a => a.ID);
             entity.Property(a => a.CPR).IsRequired();
             entity.Property(a => a.FirstName).IsRequired().HasMaxLength(100);
             entity.Property(a => a.LastName).IsRequired().HasMaxLength(100);
-            entity.Property(a => a.Balance).HasColumnType("decimal(18,2)");
+            entity.Property(a => a.Balance).IsConcurrencyToken().HasColumnType("decimal(18,2)");
         });
     }
 }

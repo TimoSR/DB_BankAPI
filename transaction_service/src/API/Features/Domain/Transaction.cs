@@ -1,5 +1,4 @@
 using CodeContracts.DDD;
-using MsgContracts;
 
 namespace API.Features.Domain;
 

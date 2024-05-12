@@ -1,6 +1,6 @@
 using CodeContracts.DDD;
 
-namespace MsgContracts;
+namespace API.Features.Domain;
 
 public readonly record struct TransactionCreatedEvent(Guid CommandId, string TransactionId, string AccountId, decimal amount, DateTime CompletionTime) : IDomainEvent
 {

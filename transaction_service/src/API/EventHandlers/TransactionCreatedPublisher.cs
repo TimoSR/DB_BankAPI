@@ -1,6 +1,5 @@
 using API.Features.Domain;
 using API.Features.Infrastructure;
-using API.Features.Infrastructure.IntegrationEvents;
 using MediatR;
 using MsgContracts;
 

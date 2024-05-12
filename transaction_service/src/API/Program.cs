@@ -4,7 +4,6 @@ using API.Features.Domain;
 using API.Features.Infrastructure;
 using API.Features.Infrastructure.Repositories;
 using CodeContracts.Infrastructure;
-using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using RabbitMQ.Client;
 using TransactionContext = API.Features.Infrastructure.Contexts.TransactionContext;

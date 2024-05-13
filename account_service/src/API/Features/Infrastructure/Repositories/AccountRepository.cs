@@ -15,17 +15,24 @@ public class AccountRepository(AccountContext context, IDomainEventDispatcher di
     public async Task<Account?> GetAccountAsync(string id)
     {
         var result = await context.Accounts.FindAsync(id);
-
+        
+        if (result == null)
+        {
+            throw new InvalidOperationException("Account not found");
+        }
+        
         return result;
     }
 
     public async Task<decimal> GetBalanceAsync(string id)
     {
         var account = await GetAccountAsync(id);
+        
         if (account == null)
         {
             throw new InvalidOperationException("Account not found");
         }
+        
         return account.Balance;
     }
     

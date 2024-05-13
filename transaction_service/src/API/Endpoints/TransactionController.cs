@@ -20,6 +20,13 @@ public class TransactionController(ITransactionService service) : ControllerBase
         var result = await service.GetTransactionByIdAsync(id);
         return Ok(result.Data);
     }
+
+    [HttpGet("GetLast10Transactions")]
+    public async Task<ActionResult<List<TransactionDTO>>> GetLast10Transaction(string id)
+    {
+        var result = await service.GetLast10TransactionsAsync(id);
+        return Ok(result.Data);
+    }
     
     [HttpPost("Create")]
     public async Task<IActionResult> Create(CreateTransactionCommand command)

@@ -44,8 +44,8 @@ public class TransactionService : ITransactionService
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Failed to get accounts.");
-            return ServiceResult<List<TransactionDTO>>.Failure("Failed to get accounts.");
+            _logger.LogError(ex, "Failed to get transactions.");
+            return ServiceResult<List<TransactionDTO>>.Failure("Failed to get transactions.");
         }
     }
 
@@ -67,8 +67,8 @@ public class TransactionService : ITransactionService
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex,"Failed to get account with ID {id}", id);
-            return ServiceResult<TransactionDTO>.Failure($"Failed to get account with {id}");
+            _logger.LogError(ex,"Failed to get transaction with ID {id}", id);
+            return ServiceResult<TransactionDTO>.Failure($"Failed to get transaction with {id}");
         }
     }
     
@@ -87,6 +87,34 @@ public class TransactionService : ITransactionService
         {
             _logger.LogError(ex,"Command {CommandId} failed to create transaction", command.Id);
             return ServiceResult.Failure("Failed to create transaction.");
+        }
+    }
+
+    public async Task<ServiceResult<List<TransactionDTO>>> GetLast10TransactionsAsync(string id)
+    {
+        try
+        {
+            var transactions = await _repository.GetLast10TransactionsAsync(id);
+
+            var transactionDTOs = new List<TransactionDTO>();
+            
+            foreach (var transaction in transactions)
+            {
+                transactionDTOs.Add(new TransactionDTO()
+                {
+                    Id = transaction.Id,
+                    AccountId = transaction.AccountId,
+                    Amount = transaction.Amount,
+                    Time = transaction.Time
+                });
+            }
+        
+            return ServiceResult<List<TransactionDTO>>.Success(transactionDTOs);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to get transactions.");
+            return ServiceResult<List<TransactionDTO>>.Failure("Failed to get transactions.");
         }
     }
 }

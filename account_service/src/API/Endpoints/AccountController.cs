@@ -11,27 +11,51 @@ public class AccountController(IAccountService service) : ControllerBase
     public async Task<ActionResult<List<AccountDTO>>> GetAll()
     {
         var result = await service.GetAllAccountsAsync();
-        return Ok(result.Data);
+
+        if (result.IsSuccess)
+        {
+            return Ok(result.Data);
+        }
+        
+        return BadRequest(result.Messages);
     }
 
     [HttpGet("GetById")]
     public async Task<ActionResult<AccountDTO>> GetById(string id)
     {
         var result = await service.GetAccountByIdAsync(id);
-        return Ok(result.Data);
+        
+        if (result.IsSuccess)
+        {
+            return Ok(result.Data);
+        }
+        
+        return BadRequest(result.Messages);
     }
 
     [HttpGet("GetBalanceById")]
     public async Task<ActionResult<decimal>> GetBalanceById(string id)
     {
         var result = await service.GetBalanceByIdAsync(id);
-        return Ok(result.Data);
+        
+        if (result.IsSuccess)
+        {
+            return Ok(result.Data);
+        }
+        
+        return BadRequest(result.Messages);
     }
 
     [HttpPost("CreateAccount")]
     public async Task<IActionResult> CreateAccount(CreateAccountCommand command)
     {
         var result = await service.CreateAccountAsync(command);
-        return Ok(result.Messages);
+        
+        if (result.IsSuccess)
+        {
+            return Ok(result.Messages);
+        }
+        
+        return BadRequest(result.Messages);
     }
 }

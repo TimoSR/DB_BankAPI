@@ -72,6 +72,8 @@ volumes:
   transaction_data:
   transaction_replica_data:
   rabbitmq_data:
+  transaction_service_dev_data:
+  account_service_dev_data:
 
 networks:
   backend_network:

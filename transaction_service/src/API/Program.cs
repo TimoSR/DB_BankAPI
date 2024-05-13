@@ -33,6 +33,7 @@ builder.Services.AddHostedService<TransactionMessageConsumer>();
 
 builder.Services.AddHttpClient("AccountServiceClient", client =>
     {
+        // This make it easy to change the version of the client everywhere
         client.BaseAddress = new Uri("https://localhost:7101/api/");
         client.DefaultRequestHeaders.Add("Accept", "application/json");
     })

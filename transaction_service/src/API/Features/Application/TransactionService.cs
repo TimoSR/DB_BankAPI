@@ -1,6 +1,6 @@
+using System.Net;
 using API.Features.Domain;
 using CodeContracts.Application.ServiceResultPattern;
-using CodeContracts.Infrastructure;
 
 namespace API.Features.Application;
 
@@ -9,15 +9,17 @@ public class TransactionService : ITransactionService
     private readonly ILogger<TransactionService> _logger;
     private readonly ITransactionRepository _repository;
     private readonly ITransactionFactory _factory;
+    private readonly IHttpClientFactory _httpClientFactory;
 
     public TransactionService( 
         ITransactionRepository repository,
         ITransactionFactory factory,
-        ILogger<TransactionService> logger,
-        IDomainEventDispatcher dispatcher)
+        IHttpClientFactory httpClientFactory,
+        ILogger<TransactionService> logger)
     {
         _repository = repository;
         _factory = factory;
+        _httpClientFactory = httpClientFactory;
         _logger = logger;
     }
     
@@ -76,12 +78,31 @@ public class TransactionService : ITransactionService
     {
         try
         {
-            var transaction = _factory.CreateTransaction(command.Id, command.AccountId, command.Amount);
+            // Create HTTP client from the factory
+            var client = _httpClientFactory.CreateClient("AccountServiceClient");
+
+            // Build the request URL with the account ID
+            var requestUrl = $"https://localhost:7101/api/Account/GetById?id={command.AccountId}";
+
+            // Send the GET request
+            var response = await client.GetAsync(requestUrl);
+
+            if (response.IsSuccessStatusCode && response.StatusCode != HttpStatusCode.NoContent)
+            {
+                
+                _logger.LogInformation("{response}", response.IsSuccessStatusCode);
+                
+                var transaction = _factory.CreateTransaction(command.Id, command.AccountId, command.Amount);
             
-            await _repository.AddTransactionAsync(command.Id, transaction);
+                await _repository.AddTransactionAsync(command.Id, transaction);
             
-            _logger.LogInformation("Command {CommandId} successfully created an transaction!", command.Id);
-            return ServiceResult.Success($"Transaction {transaction.Id} Created Successfully!");
+                _logger.LogInformation("Command {CommandId} successfully created an transaction!", command.Id);
+                return ServiceResult.Success($"Transaction {transaction.Id} Created Successfully!");
+            }
+
+            _logger.LogError("Failed to retrieve account with ID {AccountId}. Status code: {StatusCode}", command.AccountId, response.StatusCode);
+            return ServiceResult.Failure($"Error: {response.StatusCode}");
+            
         }
         catch (Exception ex)
         {
@@ -90,11 +111,11 @@ public class TransactionService : ITransactionService
         }
     }
 
-    public async Task<ServiceResult<List<TransactionDTO>>> GetLast10TransactionsAsync(string id)
+    public async Task<ServiceResult<List<TransactionDTO>>> GetLast10AccountTransactionsAsync(string id)
     {
         try
         {
-            var transactions = await _repository.GetLast10TransactionsAsync(id);
+            var transactions = await _repository.GetLast10AccountTransactionsAsync(id);
 
             var transactionDTOs = new List<TransactionDTO>();
             

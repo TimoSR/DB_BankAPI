@@ -1,4 +1,3 @@
-using API.EventHandlers;
 using API.EventHandlers.Consumers;
 using API.EventHandlers.Publishers;
 using API.Features.Application;
@@ -31,6 +30,18 @@ builder.Services.AddSingleton<RabbitMQService>(serviceProvider => {
 
 builder.Services.AddHostedService<QueueSetupHostedService>();
 builder.Services.AddHostedService<TransactionMessageConsumer>();
+
+builder.Services.AddHttpClient("AccountServiceClient", client =>
+    {
+        client.BaseAddress = new Uri("https://localhost:7101/");
+        client.DefaultRequestHeaders.Add("Accept", "application/json");
+    })
+    .ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
+    {
+        // WARNING: Only use this for development purposes!
+        ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+    });
+
 
 // Adding Mediator
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<Program>());

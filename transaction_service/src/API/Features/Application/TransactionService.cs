@@ -78,20 +78,14 @@ public class TransactionService : ITransactionService
     {
         try
         {
-            // Create HTTP client from the factory
             var client = _httpClientFactory.CreateClient("AccountServiceClient");
-
-            // Build the request URL with the account ID
-            var requestUrl = $"https://localhost:7101/api/Account/GetById?id={command.AccountId}";
-
-            // Send the GET request
+            
+            var requestUrl = $"Account/GetById?id={command.AccountId}";
+            
             var response = await client.GetAsync(requestUrl);
 
             if (response.IsSuccessStatusCode && response.StatusCode != HttpStatusCode.NoContent)
             {
-                
-                _logger.LogInformation("{response}", response.IsSuccessStatusCode);
-                
                 var transaction = _factory.CreateTransaction(command.Id, command.AccountId, command.Amount);
             
                 await _repository.AddTransactionAsync(command.Id, transaction);

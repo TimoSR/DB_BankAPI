@@ -1,9 +1,7 @@
-using NUnit.Framework;
-using FluentAssertions;
-using Moq;
 using API.Features.Domain;
+using FluentAssertions;
 
-namespace API.Tests
+namespace UnitTests
 {
     [TestFixture]
     public class TransactionTests

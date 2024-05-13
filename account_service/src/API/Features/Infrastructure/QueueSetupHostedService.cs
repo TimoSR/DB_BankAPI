@@ -3,7 +3,9 @@ namespace API.Features.Infrastructure;
 public class QueueSetupHostedService : IHostedService
 {
     private readonly RabbitMQService _rabbitMQService;
-
+    private const string AccountQue = "accountEvents";
+    private const string TransactionQue = "transactionEvents";
+    
     public QueueSetupHostedService(RabbitMQService rabbitMQService)
     {
         _rabbitMQService = rabbitMQService;
@@ -11,8 +13,8 @@ public class QueueSetupHostedService : IHostedService
 
     public Task StartAsync(CancellationToken cancellationToken)
     {
-        _rabbitMQService.SetupQueue("accountEvents");
-        _rabbitMQService.SetupQueue("transactionEvents");
+        _rabbitMQService.SetupQueue(AccountQue);
+        _rabbitMQService.SetupQueue(TransactionQue);
         return Task.CompletedTask;
     }
 

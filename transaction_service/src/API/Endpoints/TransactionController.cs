@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace API.Endpoints;
 
 [ApiController]
-[Route("[controller]")]
+[Route("api/[controller]")]
 public class TransactionController(ITransactionService service) : ControllerBase
 {
     [HttpGet("GetAll")]
@@ -21,10 +21,10 @@ public class TransactionController(ITransactionService service) : ControllerBase
         return Ok(result.Data);
     }
 
-    [HttpGet("GetLast10Transactions")]
-    public async Task<ActionResult<List<TransactionDTO>>> GetLast10Transaction(string id)
+    [HttpGet("GetLast10AccountTransaction")]
+    public async Task<ActionResult<List<TransactionDTO>>> GetLast10AccountTransaction(string id)
     {
-        var result = await service.GetLast10TransactionsAsync(id);
+        var result = await service.GetLast10AccountTransactionsAsync(id);
         return Ok(result.Data);
     }
     

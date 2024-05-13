@@ -27,7 +27,7 @@ public class TransactionCreatedPublisher : INotificationHandler<TransactionCreat
             CommandId = notification.CommandId,
             TransactionId = notification.TransactionId,
             AccountId = notification.AccountId,
-            Amount = notification.amount,
+            Amount = notification.Amount,
             CompletionTime = notification.CompletionTime
         };
         

@@ -33,12 +33,11 @@ builder.Services.AddHostedService<TransactionMessageConsumer>();
 
 builder.Services.AddHttpClient("AccountServiceClient", client =>
     {
-        client.BaseAddress = new Uri("https://localhost:7101/");
+        client.BaseAddress = new Uri("https://localhost:7101/api/");
         client.DefaultRequestHeaders.Add("Accept", "application/json");
     })
     .ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
     {
-        // WARNING: Only use this for development purposes!
         ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
     });
 

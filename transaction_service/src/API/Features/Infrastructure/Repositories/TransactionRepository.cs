@@ -20,6 +20,15 @@ public class TransactionRepository(TransactionContext context, IDomainEventDispa
         return result;
     }
     
+    public async Task<List<Transaction>> GetLast10TransactionsAsync(string accountId)
+    {
+        return await context.Transactions
+            .Where(t => t.AccountId == accountId)
+            .OrderByDescending(t => t.Time) 
+            .Take(10)
+            .ToListAsync();
+    }
+    
     public async Task AddTransactionAsync(Guid requestId, Transaction transaction)
     {
         await context.Transactions.AddAsync(transaction);

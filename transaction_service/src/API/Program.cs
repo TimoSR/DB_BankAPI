@@ -11,6 +11,7 @@ using TransactionContext = API.Features.Infrastructure.Contexts.TransactionConte
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Register Context
 builder.Services.AddDbContext<TransactionContext>(options => 
     options.UseNpgsql(builder.Configuration.GetConnectionString("AccountDbContext")));
 
@@ -28,9 +29,11 @@ builder.Services.AddSingleton<RabbitMQService>(serviceProvider => {
     return new RabbitMQService(factory, logger);
 });
 
+// Register Hosting Services
 builder.Services.AddHostedService<QueueSetupHostedService>();
 builder.Services.AddHostedService<TransactionMessageConsumer>();
 
+// Register HttpClient
 builder.Services.AddHttpClient("AccountServiceClient", client =>
     {
         // This make it easy to change the version of the client everywhere
@@ -42,7 +45,6 @@ builder.Services.AddHttpClient("AccountServiceClient", client =>
         ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
     });
 
-
 // Adding Mediator
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<Program>());
 
@@ -50,6 +52,7 @@ builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<Pr
 builder.Services.AddSingleton<IDomainEventDispatcher, DomainEventDispatcher>();
 builder.Services.AddSingleton<TransactionCreatedPublisher>();
 
+// Register Transaction classes
 builder.Services.AddScoped<ITransactionRepository, TransactionRepository>();
 builder.Services.AddScoped<ITransactionService, TransactionService>();
 builder.Services.AddScoped<ITransactionFactory, TransactionFactory>();
@@ -58,6 +61,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// Register Cors
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("MyCorsPolicy", corsPolicyBuilder =>
@@ -87,6 +91,7 @@ if (app.Environment.IsDevelopment())
     CreateDatabases(serviceProvider);
 }
 
+// No migrations are used for this project, the build is auto generated on purpose
 if (app.Environment.IsDevelopment())
 {
     app.Lifetime.ApplicationStopping.Register(() =>

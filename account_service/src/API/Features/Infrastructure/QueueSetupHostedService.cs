@@ -13,6 +13,9 @@ public class QueueSetupHostedService : IHostedService
 
     public Task StartAsync(CancellationToken cancellationToken)
     {
+        
+        // It is important to make the service that depend on a queue to create itself to not get problems upon startup.
+        
         _rabbitMQService.SetupQueue(AccountQue);
         _rabbitMQService.SetupQueue(TransactionQue);
         return Task.CompletedTask;

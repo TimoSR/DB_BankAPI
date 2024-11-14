@@ -65,6 +65,25 @@ services:
       interval: 30s
       timeout: 10s
       retries: 5
+      
+  seq:
+    image: datalust/seq
+    container_name: seq
+    environment:
+      ACCEPT_EULA: "Y"
+      SEQ_USERNAME: "admin"
+      SEQ_PASSWORD: "adminpassword"
+    ports:
+      - "5341:80"  # Default Seq web interface port
+    networks:
+      - backend_network
+    volumes:
+      - seq_data:/data
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:80" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
 volumes:
   account_data:
@@ -74,6 +93,7 @@ volumes:
   rabbitmq_data:
   transaction_service_dev_data:
   account_service_dev_data:
+  seq_data:
 
 networks:
   backend_network:

@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Security.Cryptography;
 using API.EventHandler.Consumers;
 using API.EventHandler.Publishers;
 using API.Features.Application;
@@ -6,6 +7,7 @@ using API.Features.Domain;
 using API.Features.Infrastructure;
 using API.Features.Infrastructure.Contexts;
 using API.Features.Infrastructure.Repositories;
+using API.Middleware;
 using CodeContracts.Infrastructure;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.EntityFrameworkCore;
@@ -13,6 +15,8 @@ using RabbitMQ.Client;
 using Serilog;
 using Serilog.Context;
 using Serilog.Events;
+
+//I would like to add a configuration object
 
 // Initial bootstrap logger
 Log.Logger = new LoggerConfiguration()
@@ -26,7 +30,7 @@ Log.Logger = new LoggerConfiguration()
     .Enrich.WithProperty("Application", "AgreementOffer") // Adds a fixed property for filtering
     
     .WriteTo.Console(outputTemplate:
-        "[{Timestamp:yyyy-MM-dd HH:mm:ss} {Level:u4}] {Message:lj} (TraceId={TraceId}){NewLine}{Exception}")
+        "[{Timestamp:yyyy-MM-dd HH:mm:ss} {Level:u4}] {Message:lj} (CorrelationId={CorrelationId}){NewLine}{Exception}")
     
     .WriteTo.Seq("http://localhost:5341")
     
@@ -89,53 +93,6 @@ try
 
     var app = builder.Build();
     
-    // Middleware to handle Correlation ID, log incoming requests, and measure response time
-    app.Use(async (context, next) =>
-    {
-  
-        // Skip middleware for Swagger or base path
-        if (context.Request.Path.StartsWithSegments("/swagger", StringComparison.OrdinalIgnoreCase) || 
-            context.Request.Path == "/" || 
-            string.IsNullOrEmpty(context.Request.Path.Value))
-        {
-            await next.Invoke();
-            return;
-        }
-  
-        var stopwatch = Stopwatch.StartNew(); // Start timing the request
-
-        // Generate or retrieve the correlation ID
-        var traceId = context.Request.Headers["x-correlation-id"].FirstOrDefault() ?? Guid.NewGuid().ToString();
-        context.Items["TraceId"] = traceId;
-        LogContext.PushProperty("TraceId", traceId);
-
-        // Construct the request URI
-        var requestUri = $"{context.Request.Scheme}://{context.Request.Host}{context.Request.Path}{context.Request.QueryString}";
-        
-        try
-        {
-            
-            Log.Information("Received {Method} request for {RequestUri}", 
-                context.Request.Method, requestUri);
-
-            await next(); // Process the next middleware
-            
-        }
-        catch (Exception ex)
-        {
-            Log.Error(ex, "Unhandled exception occurred.");
-        }
-        finally
-        {
-            // Stop timing and log the response time
-            stopwatch.Stop();
-            var responseTime = stopwatch.ElapsedMilliseconds;
-            
-            Log.Information("Processed {Method} request for {RequestUri} in {ResponseTime} ms", 
-                context.Request.Method, requestUri, responseTime);
-        }
-    });
-    
     // Swagger Docs, Database Setup & Delete 
 
     if (app.Environment.IsDevelopment())
@@ -185,7 +142,13 @@ try
             context.Database.EnsureDeleted();
         }
     }
-
+    
+    // Custom Middleware
+    
+    app.UseMiddleware<CorrelationMiddleware>();
+    
+    // Built In Middleware
+    
     app.UseCors("MyCorsPolicy");
     app.MapControllers();
     app.UseRouting();

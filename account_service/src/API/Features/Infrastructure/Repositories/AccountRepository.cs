@@ -7,10 +7,10 @@ namespace API.Features.Infrastructure.Repositories;
 
 public class AccountRepository(AccountContext context, IDomainEventDispatcher dispatcher) : IAccountRepository
 {
-    public async Task<List<Account>> GetAccountsAsync()
-    {
-        return await context.Accounts.ToListAsync();
-    }
+    
+    // Domain Event Dispatcher should be orchestrated at the application layer
+    
+    // Queries
     
     public async Task<Account?> GetAccountAsync(string id)
     {
@@ -23,7 +23,12 @@ public class AccountRepository(AccountContext context, IDomainEventDispatcher di
         
         return result;
     }
-
+    
+    public async Task<List<Account>> GetAccountsAsync()
+    {
+        return await context.Accounts.ToListAsync();
+    }
+    
     public async Task<decimal> GetBalanceAsync(string id)
     {
         var account = await GetAccountAsync(id);
@@ -36,14 +41,17 @@ public class AccountRepository(AccountContext context, IDomainEventDispatcher di
         return account.Balance;
     }
     
-    public async Task CreateAccountAsync(Guid requestId, Account account)
+    // Commands
+    
+    public async Task CreateAccountAsync(Account account)
     {
         await context.Accounts.AddAsync(account);
         await context.SaveChangesAsync();
         await dispatcher.DispatchEventsAsync(account);
     }
     
-    public async Task UpdateBalanceAsync(Guid requestId, string id, decimal amount)
+    // This should be orchestrated in the application layer
+    public async Task UpdateBalanceAsync(string id, decimal amount)
     {
         var account = await context.Accounts.FindAsync(id);
 
@@ -52,7 +60,7 @@ public class AccountRepository(AccountContext context, IDomainEventDispatcher di
             throw new InvalidOperationException("Account not found");
         }
 
-        account.UpdateBalance(requestId, amount);
+        account.UpdateBalance(amount);
         await context.SaveChangesAsync();
         await dispatcher.DispatchEventsAsync(account);
     }
